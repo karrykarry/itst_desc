@@ -225,5 +225,6 @@ add_executable(intensity_checker src/intensity_checker.cpp)
 target_link_libraries(intensity_checker ${catkin_LIBRARIES})
 
 add_executable(histogram_match src/histogram_match.cpp)
-add_library(histogram_operation src/histogram_operation.cpp)
-target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})
+add_library(histogram_operation src/histogram_operation.cpp src/file_operation.cpp)
+target_link_libraries(histogram_match histogram_operation ${catkin_LIBRARIES})
+# target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

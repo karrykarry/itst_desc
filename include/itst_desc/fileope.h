@@ -33,7 +33,7 @@ class file_operation
 
     std::ofstream output_log;
     int output_count = 0;
-    const std::string file_dir = "/home/amsl/histogram";
+    const std::string file_dir = "/home/amsl/Pictures/ros_catkin_ws/itst_desc";
     const std::string file_dir2 = "/test";
     const std::string file_ext = ".csv";
 

@@ -157,6 +157,7 @@ void file_operation::output_hist_result(std::vector<std::vector<double> > result
     output_log << std::endl;
   }
   std::cout << "output complete file -> " << file_name << std::endl;
+  std::cout << "finish" << std::endl;
   output_log.close();
 }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+	
+	<node name="intensity_match" pkg="itst_desc" type="intensity_match" output="screen" >
+		<!-- <remap from="/velodyne_points" to="/velodyne_obstacles" /> -->
+	</node>
+	
+</launch>
+

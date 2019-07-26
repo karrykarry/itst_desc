@@ -1,4 +1,7 @@
 //intensity_match.cpp
+//
+//intensity を用いた記述子をつくる->.csvに書き込み
+//
 
 #include <ros/ros.h>
 #include <pcl/point_cloud.h>
@@ -39,6 +42,7 @@ int main(int argc, char** argv)
 
   ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
   ros::Subscriber odom_sub = n.subscribe("/lcl_imu", 100, odom_callback);
+  
   ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
 

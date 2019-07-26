@@ -16,7 +16,7 @@ class histogram_operation
     void match_histogram_all();
 
   private:
-    file_operation file_ope;
+    file_operation* file_ope;
     std::vector<std::vector<std::vector<int> > >  ref_histogram;
 
 };
