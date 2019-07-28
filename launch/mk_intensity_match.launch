@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-	
+
+
+	<!-- <include file="$(find kari_complement)/launch/imu_complement.launch"/> -->
+
 	<node name="intensity_match" pkg="itst_desc" type="intensity_match" output="screen" >
-		<!-- <remap from="/velodyne_points" to="/velodyne_obstacles" /> -->
+		<remap from="/lcl_imu" to="/odometer" />
 	</node>
 	
 </launch>

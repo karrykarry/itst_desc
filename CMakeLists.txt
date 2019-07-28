@@ -211,20 +211,20 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(intensity_match src/intensity_match.cpp)
-add_library(descriptor src/descriptor.cpp)
-add_library(visualizer src/visualizer.cpp)
-add_library(file_operation src/file_operation.cpp)
-add_library(localize src/localize.cpp)
+add_library(descriptor src/library/descriptor.cpp)
+add_library(visualizer src/library/visualizer.cpp)
+add_library(file_operation src/library/file_operation.cpp)
+add_library(localize src/library/localize.cpp)
 target_link_libraries(intensity_match descriptor visualizer file_operation localize ${catkin_LIBRARIES})
 
 add_executable(intensity_match_test src/intensity_match_test.cpp)
-add_library(descriptor_test src/descriptor_test.cpp)
+add_library(descriptor_test src/library/descriptor_test.cpp)
 target_link_libraries(intensity_match_test descriptor_test visualizer ${catkin_LIBRARIES})
 
 add_executable(intensity_checker src/intensity_checker.cpp)
 target_link_libraries(intensity_checker ${catkin_LIBRARIES})
 
 add_executable(histogram_match src/histogram_match.cpp)
-add_library(histogram_operation src/histogram_operation.cpp src/file_operation.cpp)
+add_library(histogram_operation src/library/histogram_operation.cpp src/library/file_operation.cpp)
 target_link_libraries(histogram_match histogram_operation ${catkin_LIBRARIES})
 # target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

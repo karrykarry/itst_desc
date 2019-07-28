@@ -8,6 +8,7 @@
 #include <pcl_ros/point_cloud.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <nav_msgs/Odometry.h>
+#include <std_msgs/Empty.h>
 #include <visualization_msgs/Marker.h>
 #include <descriptor.h>
 #include <visualizer.h>
@@ -45,6 +46,7 @@ int main(int argc, char** argv)
   
   ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
+  ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("pr/saveflag", 10);
 
   descriptor desc;
   visualizer visu;
@@ -52,12 +54,13 @@ int main(int argc, char** argv)
   localize local;
 
   std::vector<std::vector<int> > histogram;
+  std_msgs::Empty PR_flag;
   ros::Time ros_begin;
 
   while(ros::ok()){
     if(input_pc -> points.size() > 0){
       if(start_flag){
-        ros_begin  = ros::Time::now();
+        // ros_begin  = ros::Time::now();
         start_flag = false;
       }
       desc.itst_descriptor(input_pc, histogram);
@@ -65,6 +68,7 @@ int main(int argc, char** argv)
       if(odometry_flag){
         if(local.split_metre(odometry, file_ope.output_dist)){
           file_ope.output_hist_dist_split(histogram);
+			PR_pub.publish(PR_flag); 
         }
         odometry_flag = false;
       }
