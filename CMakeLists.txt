@@ -227,4 +227,14 @@ target_link_libraries(intensity_checker ${catkin_LIBRARIES})
 add_executable(histogram_match src/histogram_match.cpp)
 add_library(histogram_operation src/library/histogram_operation.cpp src/library/file_operation.cpp)
 target_link_libraries(histogram_match histogram_operation ${catkin_LIBRARIES})
+
+
+add_executable(realtime_histogram_match node/realtime_histogram_match_node.cpp src/realtime_histogram_match.cpp)
+
+target_link_libraries(realtime_histogram_match 
+	descriptor 
+	histogram_operation 
+	${catkin_LIBRARIES}
+	${PCL_LIBRARIES})
+
 # target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

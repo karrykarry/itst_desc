@@ -2,13 +2,9 @@
 //descriptor.cpp
 
 #include <descriptor.h>
-#include <math.h>
-#include <Eigen/Core>
-#include <Eigen/Dense>
+descriptor::descriptor(){
 
-#include <fstream>
-#include <iostream>
-
+}
 
 void descriptor::calibration(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
 {}  //not used
@@ -106,7 +102,7 @@ void descriptor::sort_eigen(void)
   //}
 }
 
-void descriptor::calc_RF(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
+void descriptor::calc_RF(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
 {
   init_calc_RF();
   double R2di_sum = 0;
@@ -215,7 +211,7 @@ void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram)
   }
 }
 
-void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+void descriptor::itst_descriptor(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
                                  std::vector<std::vector<int> > &histogram)
 {
   split_pcs(input_pc);

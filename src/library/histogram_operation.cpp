@@ -55,4 +55,46 @@ void histogram_operation::match_histogram_all(void)
     histogram_result.push_back(histogram_result_one);
   }
   file_ope->output_hist_result(histogram_result);
-} 
+}
+
+
+
+void histogram_operation::match_histogram_pc(std::vector<std::vector<int> > test_histogram)
+{
+	bool flag = false;
+
+	for(size_t i = 0; i < ref_histogram.size(); i++){
+		double ith_histogram_average = 0;
+
+		for(size_t j = 0; j < ref_histogram[0].size(); j++){
+			double histogram_one = 0;
+
+			for(size_t k = 0; k < ref_histogram[0][0].size(); k++){
+				if(test_histogram[j][k] + ref_histogram[i][j][k] != 0){
+					histogram_one += 2 * pow(test_histogram[j][k] - ref_histogram[i][j][k], 2) / (test_histogram[j][k] + ref_histogram[i][j][k]);
+
+				}
+			}
+
+			ith_histogram_average += histogram_one;
+		}
+
+		ith_histogram_average /= (double)ref_histogram[0].size();
+
+		if(!flag){
+			final_ans.score = ith_histogram_average;
+			final_ans.num= i;
+		}
+		else{
+			if(ith_histogram_average<final_ans.score){
+				final_ans.score = ith_histogram_average;
+				final_ans.num = i; 
+			}	
+		}
+	}
+	
+	std::cout<<"number:"<<final_ans.num<<",score:"<<final_ans.score<<std::endl;
+
+}
+
+

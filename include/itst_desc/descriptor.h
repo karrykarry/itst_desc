@@ -4,11 +4,18 @@
 #include <pcl/point_cloud.h>
 #include <pcl_ros/point_cloud.h>
 #include <vector>
+#include <math.h>
+#include <Eigen/Core>
+#include <Eigen/Dense>
+
+#include <fstream>
+#include <iostream>
 
 class descriptor
 {
   public:
-  void itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+  descriptor();
+  void itst_descriptor(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
                        std::vector<std::vector<int> > &histogram);
  
   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > split_pc;
@@ -20,7 +27,7 @@ class descriptor
   void split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc);  //記述子用の点群分割
   void init_pc_vec(void);  //pc_vecの初期化
   double tidy_rad(double rad_in);  //角度を整える 
-  void calc_RF(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc);  //RFの算出
+  void calc_RF(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc);  //RFの算出
   void init_calc_RF(void);  //変数の初期化
   void sort_eigen(void);  //固有値の小さい順に並べ替え
   void calc_histogram(std::vector<std::vector<int> > &histogram);
