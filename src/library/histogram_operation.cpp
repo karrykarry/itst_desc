@@ -59,7 +59,8 @@ void histogram_operation::match_histogram_all(void)
 
 
 
-void histogram_operation::match_histogram_pc(std::vector<std::vector<int> > test_histogram)
+void histogram_operation::match_histogram_pc(
+		std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &score)
 {
 	bool flag = false;
 
@@ -80,13 +81,23 @@ void histogram_operation::match_histogram_pc(std::vector<std::vector<int> > test
 		}
 
 		ith_histogram_average /= (double)ref_histogram[0].size();
+		
+		double score_;
+		if(ith_histogram_average==0.0) score_ = 10000.0;
+		
+		else score_ = 10000.0 / ith_histogram_average;
+		
+
+		// score.data.push_back(ith_histogram_average);
+		score.data.push_back(score_);
 
 		if(!flag){
 			final_ans.score = ith_histogram_average;
 			final_ans.num= i;
+			flag = true;
 		}
 		else{
-			if(ith_histogram_average<final_ans.score){
+			if(ith_histogram_average < final_ans.score){
 				final_ans.score = ith_histogram_average;
 				final_ans.num = i; 
 			}	
