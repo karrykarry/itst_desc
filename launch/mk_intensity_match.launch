@@ -6,6 +6,7 @@
 
 	<node name="intensity_match" pkg="itst_desc" type="intensity_match" output="screen" >
 		<remap from="/lcl_imu" to="/odometer" />
+		<!-- <remap from="/lcl_imu" to="/integrated_to_init/kari" /> -->
 	</node>
 	
 </launch>
