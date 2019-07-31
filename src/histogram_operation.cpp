@@ -9,6 +9,7 @@ histogram_operation::~histogram_operation()
 {
   std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_f);
   std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_b);
+  std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_all);
   std::vector<std::vector<double> >().swap(histogram_result);
 }
 
@@ -88,14 +89,35 @@ void histogram_operation::match_histogram_one(std::string forb, std::string test
   file_ope.output_hist_result(histogram_result);
 }
 
-void histogram_operation::match_histogram_all(void)
+void histogram_operation::joint_histogram(void)
 {
-  std::cout << "matching all histograms" << std::endl;
-  std::vector<std::vector<double> > histogram_result;
-  const int ref_hist_vol = file_ope.file_count("f");
+  int hist_vol = file_ope.file_count("f");
+  for(int i = 0; i < hist_vol; i++){
+    ref_histogram_all.push_back(ref_histogram_f[i]);
+  }
+ 
+  hist_vol = file_ope.file_count("b");
+  for(int i = 0; i < hist_vol; i++){
+    ref_histogram_all.push_back(ref_histogram_b[i]);
+  }
+}
+
+void histogram_operation::match_histogram_all(std::string forb)
+{
+  if(forb == "f"){
+    std::cout << "Matching histograms ALL\n" << "TEST   -> FRONT" << std::endl;
+  }else if(forb == "b"){
+    std::cout << "Matching histograms ALL\n" << "TEST   -> BACK" << std::endl;
+  }else{
+    std::cout << "Can't match histograms -> " << forb << std::endl;
+    exit(0);
+  }
+  const int ref_hist_vol = file_ope.file_count(forb);
+  joint_histogram();
+  
   for(int i = 0; i < ref_hist_vol; i++){
     std::vector<double> histogram_result_one;
-    //match_histogram(i, histogram_result_one);
+    match_histogram(ref_histogram_all, i, forb, histogram_result_one);
     histogram_result.push_back(histogram_result_one);
   }
   file_ope.output_hist_result(histogram_result);
