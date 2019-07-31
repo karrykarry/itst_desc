@@ -14,7 +14,12 @@ void visualizer::vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
       temp.x = split_pc[i] -> points[j].x;
       temp.y = split_pc[i] -> points[j].y;
       temp.z = split_pc[i] -> points[j].z;
-      temp.intensity = i * 12 + 10;
+      int intensity_temp = i * 26 + 10;
+      if(intensity_temp > 256){
+        intensity_temp -= 256;
+      }
+      temp.intensity = intensity_temp;
+      
       output_pc_ -> points.push_back(temp);
     }
   }

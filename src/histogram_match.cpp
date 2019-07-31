@@ -36,8 +36,9 @@ int main(int argc, char** argv)
   std::vector<std::vector<int> > histogram;
   ros::Time ros_begin;
 
-  hist_ope.read_ref_histogram();
-  hist_ope.match_histogram_all();
+  hist_ope.read_ref_histogram_f();
+  hist_ope.read_ref_histogram_b();
+  hist_ope.match_histogram_one("b", "b");
 /*
   while(ros::ok()){
     if(input_pc -> points.size() > 0){

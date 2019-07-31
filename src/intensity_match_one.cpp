@@ -1,4 +1,4 @@
-//intensity_match.cpp
+//intensity_match_one.cpp
 
 #include <ros/ros.h>
 #include <pcl/point_cloud.h>
@@ -14,7 +14,7 @@
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
 nav_msgs::Odometry odometry;
-bool time_start_flag = true;
+bool start_flag = true;
 bool odometry_flag = false;
 double ref_distance = 0;
 
@@ -33,7 +33,7 @@ void odom_callback(nav_msgs::Odometry input)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "intensity_match");
+  ros::init(argc, argv, "intensity_match_one");
   ros::NodeHandle n;
   ros::Rate loop_rate(10);
 
@@ -47,22 +47,20 @@ int main(int argc, char** argv)
   file_operation file_ope;
   localize local;
 
-  std::vector<std::vector<int> > histogram_f;
-  std::vector<std::vector<int> > histogram_b;
+  std::vector<std::vector<int> > histogram;
   ros::Time ros_begin;
 
   while(ros::ok()){
     if(input_pc -> points.size() > 0){
-      //if(time_start_flag){
-      //  ros_begin  = ros::Time::now();
-      //  time_start_flag = false;
-      //}
-      desc.itst_descriptor(input_pc, histogram_f, histogram_b);
+      if(start_flag){
+        ros_begin  = ros::Time::now();
+        start_flag = false;
+      }
+      desc.itst_descriptor_one(input_pc, histogram);
 
       if(odometry_flag){
         if(local.split_metre(odometry, file_ope.output_dist)){
-          file_ope.output_hist_dist_s_f(histogram_f);
-          file_ope.output_hist_dist_s_b(histogram_b);
+          file_ope.output_hist_dist_s_f(histogram);
         }
         odometry_flag = false;
       }

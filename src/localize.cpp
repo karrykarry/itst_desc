@@ -20,7 +20,7 @@ double localize::calc_distance_r(nav_msgs::Odometry input)
     double temp_x = input.pose.pose.position.x - last_odom_r.pose.pose.position.x;
     double temp_y = input.pose.pose.position.y - last_odom_r.pose.pose.position.y;
     distance += sqrt(pow(temp_x ,2) + pow(temp_y, 2));
-    std::cout << "distance " << distance << std::endl;
+    //std::cout << "distance " << distance << std::endl;
     last_odom_r = input;
   } 
   return distance;
@@ -31,8 +31,7 @@ double localize::calc_distance_n(nav_msgs::Odometry input)
   double temp_x = input.pose.pose.position.x - last_odom_n.pose.pose.position.x;
   double temp_y = input.pose.pose.position.y - last_odom_n.pose.pose.position.y;
   distance = sqrt(pow(temp_x ,2) + pow(temp_y, 2));
-  std::cout << "distance " << distance << std::endl;
-
+  //std::cout << "distance " << distance << std::endl;
   return distance;
 }
 

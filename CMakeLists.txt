@@ -210,11 +210,14 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(intensity_match src/intensity_match.cpp)
+add_executable(intensity_match_one src/intensity_match_one.cpp)
 add_library(descriptor src/descriptor.cpp)
 add_library(visualizer src/visualizer.cpp)
 add_library(file_operation src/file_operation.cpp)
 add_library(localize src/localize.cpp)
+target_link_libraries(intensity_match_one descriptor visualizer file_operation localize ${catkin_LIBRARIES})
+
+add_executable(intensity_match src/intensity_match.cpp)
 target_link_libraries(intensity_match descriptor visualizer file_operation localize ${catkin_LIBRARIES})
 
 add_executable(intensity_match_test src/intensity_match_test.cpp)

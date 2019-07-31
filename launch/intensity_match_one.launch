@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="intensity_match_one" pkg="itst_desc" type="intensity_match_one" output="screen" />
+	<node name="infant_local" pkg="complement" type="infant_local"/>
+</launch>

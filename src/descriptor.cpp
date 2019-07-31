@@ -12,7 +12,7 @@
 void descriptor::calibration(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
 {}  //not used
 
-void descriptor::init_pc_vec(void)
+void descriptor::init_pc_vec(std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > &split_pc)
 {
   //前半内球後半外球  0radから順に配列割り振り 
   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr >().swap(split_pc);
@@ -25,18 +25,21 @@ void descriptor::init_pc_vec(void)
 
 double descriptor::tidy_rad(double rad_in)
 {
-  if(rad_in < 0){
-    rad_in = 2 * M_PI + rad_in;
+  if(rad_in > 2.0 * M_PI){
+    rad_in = rad_in - 2 * M_PI;
+  }else if(rad_in < -2.0 * M_PI){
+    rad_in = rad_in + 4 * M_PI;
+  }else if(rad_in < 0){
+    rad_in = rad_in + 2.0 * M_PI;
   }
   return rad_in;
 }
 
-void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
+void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+                           std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > &split_pc,
+                           double split_angle)
 {
-  input_pc_size = input_pc -> points.size();
-  init_pc_vec();
-  intensity_max = 0;  
-  intensity_min = 255;  
+  init_pc_vec(split_pc);
 
   for(size_t i = 0; i < input_pc_size; i++){
     pcl::PointXYZI temp;
@@ -45,7 +48,7 @@ void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
     temp.z = input_pc -> points[i].z;
     temp.intensity = input_pc -> points[i].intensity;
 
-    double pc_rad = atan2(temp.y ,temp.x);
+    double pc_rad = atan2(temp.y ,temp.x) - split_angle;
     pc_rad = tidy_rad(pc_rad);
     //std::cout << "pc_theta" << pc_rad * 180 / M_PI << std::endl;
 
@@ -68,15 +71,11 @@ void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
       split_pc[split_n] -> points.push_back(temp);
     }
 
-    if(intensity_max < temp.intensity) intensity_max = temp.intensity;  
-    if(intensity_min > temp.intensity) intensity_min = temp.intensity;  
   }
 
   //for(int i=0; i<16; i++){
   //  std::cout << "n= " << i << " -> " << split_pc[i] -> points.size() << std::endl;
   //}
-  //std::cout << "intensity_max " << intensity_max << std::endl; 
-  //std::cout << "intensity_min " << intensity_min << std::endl; 
 }
 
 void descriptor::init_calc_RF(void)
@@ -197,11 +196,22 @@ void descriptor::calc_RF(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
   eigenvector[1] = eigenvector[2].cross(eigenvector[0]);
    
   //for(size_t i = 0; i < eigenvalue.size(); i++){
-  //  std::cout << "final vec " << eigenvector[i] << std::endl;
+  //  std::cout << "final vec " << i << " : " << eigenvector[i] << std::endl;
   //}
+  //std::cout << "final vec " << 1 << " : " << eigenvector[1] << std::endl;
+
 }
 
-void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram)
+double descriptor::calc_split_angle(void)
+{
+  double angle = atan2(eigenvector[1](1), eigenvector[1](0));
+  angle = tidy_rad(angle);
+  //std::cout << "angle " << angle << std::endl;
+  return angle;
+}
+
+void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
+                                    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > split_pc)
 {
   histogram.clear();
   for(size_t i = 0; i < split_pc.size(); i++){
@@ -214,11 +224,24 @@ void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram)
   }
 }
 
-void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+void descriptor::itst_descriptor_one(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
                                  std::vector<std::vector<int> > &histogram)
 {
-  split_pcs(input_pc);
+  input_pc_size = input_pc -> points.size();
   calc_RF(input_pc);
-  calc_histogram(histogram);
-  
+  split_pcs(input_pc, split_pc_f, 0);
+  calc_histogram(histogram, split_pc_f);
+}
+
+void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+                                 std::vector<std::vector<int> > &histogram_f,
+                                 std::vector<std::vector<int> > &histogram_b)
+{
+  input_pc_size = input_pc -> points.size();
+  calc_RF(input_pc);
+  double split_angle = calc_split_angle();
+  split_pcs(input_pc, split_pc_f, split_angle);
+  split_pcs(input_pc, split_pc_b, split_angle + M_PI);
+  calc_histogram(histogram_f, split_pc_f);
+  calc_histogram(histogram_b, split_pc_b);
 }
