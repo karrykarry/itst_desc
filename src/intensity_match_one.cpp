@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 
       if(odometry_flag){
         if(local.split_metre(odometry, file_ope.output_dist)){
-          file_ope.output_hist_dist_s_f(histogram);
+          file_ope.output_hist_dist_s_f(histogram, odometry);
         }
         odometry_flag = false;
       }

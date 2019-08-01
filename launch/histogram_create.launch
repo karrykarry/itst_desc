@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="histogram_create" pkg="itst_desc" type="histogram_create" output="screen" />
+	<node name="infant_local" pkg="complement" type="infant_local"/>
+</launch>

@@ -10,7 +10,6 @@
 #include <visualizer.h>
 #include <fileope.h>
 #include <localize.h>
-#include <histogram_operation.h>
 
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
@@ -34,7 +33,7 @@ void odom_callback(nav_msgs::Odometry input)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "intensity_match");
+  ros::init(argc, argv, "histogram_create");
   ros::NodeHandle n;
   ros::Rate loop_rate(10);
 
@@ -47,9 +46,9 @@ int main(int argc, char** argv)
   visualizer visu;
   file_operation file_ope;
   localize local;
-  histogram_operation hist_ope;
 
   std::vector<std::vector<int> > histogram_f;
+  std::vector<std::vector<int> > histogram_b;
   //ros::Time ros_begin;
 
   while(ros::ok()){
@@ -58,9 +57,13 @@ int main(int argc, char** argv)
       //  ros_begin  = ros::Time::now();
       //  time_start_flag = false;
       //}
-      desc.itst_descriptor_one(input_pc, histogram_f);
+      desc.itst_descriptor(input_pc, histogram_f, histogram_b);
+
       if(odometry_flag){
-        hist_ope.research_match_n(histogram_f, 3);
+        if(local.split_metre(odometry, file_ope.output_dist)){
+          file_ope.output_hist_dist_s_f(histogram_f, odometry);
+          file_ope.output_hist_dist_s_b(histogram_b, odometry);
+        }
         odometry_flag = false;
       }
       //file_ope.output_hist_time(histogram, ros_begin);
@@ -70,6 +73,5 @@ int main(int argc, char** argv)
     ros::spinOnce();
     loop_rate.sleep();
   }
-
   return(0);
 }

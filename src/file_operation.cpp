@@ -64,6 +64,21 @@ void file_operation::write_histogram_time(std::vector<std::vector<int> > histogr
   output_log << "Time = " << ros::Time::now().sec - ros_begin.sec << std::endl;
 }
 
+void file_operation::write_histogram_coordinate(std::vector<std::vector<int> > histogram,
+                                                nav_msgs::Odometry odometry)
+{
+  for(size_t i = 0; i < histogram.size(); i++){
+    for(size_t j = 0; j < histogram[i].size(); j++){
+      output_log << histogram[i][j];
+      if(j != histogram[i].size() - 1){
+        output_log << ",";
+      }
+    }
+    output_log << std::endl;
+  }
+  output_log << odometry.pose.pose.position.x << "," << odometry.pose.pose.position.y << std::endl;
+}
+
 void file_operation::output_hist_dist(std::vector<std::vector<int> > histogram,
                                       double distance)
 {
@@ -79,7 +94,8 @@ void file_operation::output_hist_dist(std::vector<std::vector<int> > histogram,
   }
 }
 
-void file_operation::output_hist_dist_s_f(std::vector<std::vector<int> > histogram)
+void file_operation::output_hist_dist_s_f(std::vector<std::vector<int> > histogram,
+                                          nav_msgs::Odometry odometry)
 {
   std::cout << "create histogram number: " << output_count_f << "  FRONT" << std::endl;
   std::string file_name;
@@ -87,11 +103,12 @@ void file_operation::output_hist_dist_s_f(std::vector<std::vector<int> > histogr
   output_count_f++;
   std::cout << "output filename  " << file_name << std::endl;
   open_output_log(file_name);
-  write_histogram_dist(histogram, 0);
+  write_histogram_coordinate(histogram, odometry);
   output_log.close();
 }
 
-void file_operation::output_hist_dist_s_b(std::vector<std::vector<int> > histogram)
+void file_operation::output_hist_dist_s_b(std::vector<std::vector<int> > histogram,
+                                          nav_msgs::Odometry odometry)
 {
   std::cout << "create histogram number: " << output_count_b << "  BACK" << std::endl;
   std::string file_name;
@@ -99,7 +116,7 @@ void file_operation::output_hist_dist_s_b(std::vector<std::vector<int> > histogr
   output_count_b++;
   std::cout << "output filename  " << file_name << std::endl;
   open_output_log(file_name);
-  write_histogram_dist(histogram, 0);
+  write_histogram_coordinate(histogram, odometry);
   output_log.close();
 }
 

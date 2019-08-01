@@ -229,7 +229,8 @@ void descriptor::itst_descriptor_one(pcl::PointCloud<pcl::PointXYZI>::Ptr input_
 {
   input_pc_size = input_pc -> points.size();
   calc_RF(input_pc);
-  split_pcs(input_pc, split_pc_f, 0);
+  double split_angle = calc_split_angle();
+  split_pcs(input_pc, split_pc_f, split_angle);
   calc_histogram(histogram, split_pc_f);
 }
 

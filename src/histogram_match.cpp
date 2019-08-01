@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   hist_ope.read_ref_histogram_f();
   hist_ope.read_ref_histogram_b();
   //hist_ope.match_histogram_one("b", "b");
-  hist_ope.match_histogram_all("f");
+  hist_ope.match_histogram_all_output("f");
 /*
   while(ros::ok()){
     if(input_pc -> points.size() > 0){
