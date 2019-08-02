@@ -10,6 +10,7 @@ file_operation::file_operation()
 {
   output_count_f = 0;
   output_count_b = 0;
+  first_output_flag = true;
 }
 
 file_operation::~file_operation()
@@ -28,6 +29,14 @@ void file_operation::name_files(std::string &file_name, int count, std::string f
 
 void file_operation::open_output_log(std::string output_file){
   output_log.open(output_file, std::ios::trunc);
+  if(!output_log.is_open()){
+    std::cout << "NOT OPEN FILE -> " << output_file << std::endl;
+    exit(1);
+  }
+}
+
+void file_operation::open_output_log_add(std::string output_file){
+  output_log.open(output_file, std::ios::app);
   if(!output_log.is_open()){
     std::cout << "NOT OPEN FILE -> " << output_file << std::endl;
     exit(1);
@@ -227,3 +236,50 @@ int file_operation::file_count(std::string forb)
   //std::cout << "file volume = " << i << std::endl;
   return i;
 }
+
+void file_operation::odom_input(nav_msgs::Odometry &odometry, std::pair<int, std::string>  candidate_hist)
+{
+  std::string file_name;
+  name_files(file_name, candidate_hist.first, candidate_hist.second);
+  open_input_log(file_name);
+  
+  std::string str = "";
+  for(int i = 0; i < histogram_vol; i++) getline(input_log, str);
+  getline(input_log, str);
+  std::string tmp = "";
+  std::istringstream stream(str);
+  std::vector<double> odom_tmp;
+  while (getline(stream, tmp, ',')){
+      odom_tmp.push_back(stod(tmp));
+  }
+  odometry.pose.pose.position.x = odom_tmp[0];
+  odometry.pose.pose.position.y = odom_tmp[1];
+  input_log.close();
+}
+
+void file_operation::odom_dist_chk(std::vector<double> dist_vec)
+{
+  std::string file_name;
+  file_name = file_dir;
+  file_name.append(file_dir2);
+  file_name.append("/");
+  file_name.append("odom_dist_result");
+  file_name.append(file_ext);
+
+  if(first_output_flag){
+    open_output_log(file_name);
+    first_output_flag = false;
+  }else{
+    open_output_log_add(file_name);
+  }
+
+  for(size_t i = 0; i < dist_vec.size(); i++){
+    output_log << dist_vec[i];
+    if(i != dist_vec.size() - 1){
+      output_log << ",";
+    }
+  }
+  output_log << std::endl;
+  output_log.close();
+}
+

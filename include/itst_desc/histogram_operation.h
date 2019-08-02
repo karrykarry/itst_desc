@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <fileope.h>
+#include <nav_msgs/Odometry.h>
 
 class file_operation;
 
@@ -22,14 +23,13 @@ class histogram_operation
     void research_match_one(std::vector<std::vector<int> > histogram);
     //第nth番までのノードを検索
     void research_match_n(std::vector<std::vector<int> > histogram, int nth);
-
-
+    void evaluate_match_n(nav_msgs::Odometry odometry, std::vector<std::vector<int> > histogram, int nth);
 
   private:
     void match_histogram_one(std::string forb, std::string test_forb);
     void match_histogram_all(std::string forb);
     void joint_histogram(void);
-    std::string rename_hist_number(size_t index);
+    std::string rename_hist_number(size_t index, std::pair<int, std::string> &rename_hist);
  
     file_operation file_ope;
     std::vector<std::vector<std::vector<int> > >  ref_histogram_f;
@@ -38,6 +38,9 @@ class histogram_operation
     std::vector<std::vector<double> > histogram_result;
     int ref_hist_vol_f;
     int ref_hist_vol_b;
+    //std::vector<std::string> candidate_hist;
+    std::vector<std::pair<int, std::string> > candidate_hist;
+
 };
 
 #endif

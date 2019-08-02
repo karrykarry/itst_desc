@@ -60,7 +60,7 @@ int main(int argc, char** argv)
       //}
       desc.itst_descriptor_one(input_pc, histogram_f);
       if(odometry_flag){
-        hist_ope.research_match_n(histogram_f, 3);
+        hist_ope.evaluate_match_n(odometry, histogram_f, 3);
         odometry_flag = false;
       }
       //file_ope.output_hist_time(histogram, ros_begin);

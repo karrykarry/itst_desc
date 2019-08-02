@@ -14,6 +14,7 @@ histogram_operation::~histogram_operation()
   std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_b);
   std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_all);
   std::vector<std::vector<double> >().swap(histogram_result);
+  std::vector<std::pair<int, std::string> >().swap(candidate_hist);
 }
 
 void histogram_operation::read_ref_histogram_f(void)
@@ -140,14 +141,18 @@ void histogram_operation::match_histogram_all_output(std::string forb)
   file_ope.output_hist_result(histogram_result);
 }
 
-std::string histogram_operation::rename_hist_number(size_t index)
+std::string histogram_operation::rename_hist_number(size_t index, std::pair<int, std::string> &rename_hist)
 {
   if((int)index < ref_hist_vol_f){
+    rename_hist.first = (int)index;
+    rename_hist.second = "f";
     std::string s_index = std::to_string(index);
     s_index.append("  FRONT");
     return s_index;
   }else if((int)index >= ref_hist_vol_f){
-    index -= (ref_hist_vol_f - 1);
+    index -= ref_hist_vol_f;
+    rename_hist.first = (int)index;
+    rename_hist.second = "b";
     std::string s_index = std::to_string(index);
     s_index.append("  BACK");
     return s_index;
@@ -165,7 +170,8 @@ void histogram_operation::research_match_one(std::vector<std::vector<int> > hist
   double min = *std::min_element(result.begin(), result.end());
   std::vector<double>::iterator minIt = std::min_element(result.begin(), result.end());
   size_t minIndex = std::distance(result.begin(), minIt);
-  std::string min_hist = rename_hist_number(minIndex);
+  std::pair<int, std::string> rename_hist;
+  std::string min_hist = rename_hist_number(minIndex, rename_hist);
   std::cout << "value " << min << "  index " << min_hist << std::endl;
 }
 
@@ -183,9 +189,28 @@ void histogram_operation::research_match_n(std::vector<std::vector<int> > histog
   }
   std::sort(i_result.begin(), i_result.end());
   
+  std::cout << "--------------" << std::endl;
   for(int i = 0; i < nth; i++){
-    std::string min_hist = rename_hist_number(i_result[i].second);
+    std::pair<int, std::string> rename_hist;
+    std::string min_hist = rename_hist_number(i_result[i].second, rename_hist);
+    candidate_hist.push_back(rename_hist);
     std::cout << i << "th -> value: " << i_result[i].first << "  index: " << min_hist << std::endl;
   }
-  std::cout << "--------------" << std::endl;
+}
+
+void histogram_operation::evaluate_match_n(nav_msgs::Odometry odometry, std::vector<std::vector<int> > histogram, int nth)
+{
+  candidate_hist.clear();
+  research_match_n(histogram, nth);
+  std::vector<double> distance_vec;
+  for(int i = 0; i < nth; i++){
+    nav_msgs::Odometry odometry_tmp;
+    file_ope.odom_input(odometry_tmp, candidate_hist[i]);
+    double distance = sqrt(pow(odometry.pose.pose.position.x - odometry_tmp.pose.pose.position.x, 2) + pow(odometry.pose.pose.position.y - odometry_tmp.pose.pose.position.y, 2));
+    distance_vec.push_back(distance);
+    //std::cout << i << "th odom_x :" << odometry_tmp.pose.pose.position.x << std::endl;
+    //std::cout << i << "th odom_y :" << odometry_tmp.pose.pose.position.y << std::endl;
+    std::cout << i << "th distance :" << distance << std::endl;
+  }
+  file_ope.odom_dist_chk(distance_vec);
 }

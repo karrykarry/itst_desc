@@ -24,7 +24,12 @@ class file_operation
     //ヒストグラム読み込み
     void input_histogram(std::vector<std::vector<int> > &histogram_tmp, int input_count, std::string forb);
     void output_hist_result(std::vector<std::vector<double> > result);  //for test
+    //front or backのファイルをカウント
     int file_count(std::string forb);
+    //ヒストグラムのodomを出力
+    void odom_input(nav_msgs::Odometry &odometry, std::pair<int, std::string> candidate_hist);
+    void odom_dist_chk(std::vector<double> dist_vec);
+
 
     const double output_time = 5.0;  //histogramを算出する間隔 time
     const double output_dist = 5.0;  //histogramを算出する間隔 distance
@@ -32,14 +37,15 @@ class file_operation
   private:
     void name_files(std::string &file_name, int count, std::string forb);
     void open_output_log(std::string output_file);
+    void open_output_log_add(std::string output_file);
     void write_histogram_dist(std::vector<std::vector<int> > histogram, double distance);
     void write_histogram_time(std::vector<std::vector<int> > histogram, ros::Time ros_begin);
     void write_histogram_coordinate(std::vector<std::vector<int> > histogram, nav_msgs::Odometry odometry);
-
     void open_input_log(std::string input_file);
     void read(std::vector<std::vector<int> > &histogram_tmp);
 
     std::ofstream output_log;
+    bool first_output_flag;
     int output_count_f;
     int output_count_b;
     const std::string file_dir = "/home/amsl/histogram";
