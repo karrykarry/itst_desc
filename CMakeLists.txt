@@ -237,4 +237,14 @@ target_link_libraries(realtime_histogram_match
 	${catkin_LIBRARIES}
 	${PCL_LIBRARIES})
 
+
+
+add_executable(realtime_histogram_match_pf node/realtime_histogram_match_pf_node.cpp src/realtime_histogram_match_pf.cpp)
+target_link_libraries(realtime_histogram_match_pf 
+	descriptor 
+	histogram_operation 
+	${catkin_LIBRARIES}
+	${PCL_LIBRARIES})
+
+
 # target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

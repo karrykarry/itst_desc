@@ -60,7 +60,7 @@ void histogram_operation::match_histogram_all(void)
 
 
 void histogram_operation::match_histogram_pc(
-		std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &score)
+		std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &score, std_msgs::Int32 &best_pr_num)
 {
 	bool flag = false;
 
@@ -106,6 +106,41 @@ void histogram_operation::match_histogram_pc(
 	
 	std::cout<<"number:"<<final_ans.num<<",score:"<<final_ans.score<<std::endl;
 
+	best_pr_num.data = final_ans.num;
 }
+
+
+
+void histogram_operation::match_histogram_pc_pf(
+		const std::vector<std::vector<int> > test_histogram, double& score_)
+{
+
+	for(size_t i = 0; i < ref_histogram.size(); i++){
+		double ith_histogram_average = 0;
+
+		for(size_t j = 0; j < ref_histogram[0].size(); j++){
+			double histogram_one = 0;
+
+			for(size_t k = 0; k < ref_histogram[0][0].size(); k++){
+				if(test_histogram[j][k] + ref_histogram[i][j][k] != 0){
+					histogram_one += 2 * pow(test_histogram[j][k] - ref_histogram[i][j][k], 2) / (test_histogram[j][k] + ref_histogram[i][j][k]);
+
+				}
+			}
+
+			ith_histogram_average += histogram_one;
+		}
+
+		ith_histogram_average /= (double)ref_histogram[0].size();
+		
+		// double score_;
+		if(ith_histogram_average==0.0) score_ = 10000.0;
+		
+		else score_ = 10000.0 / ith_histogram_average;
+	
+	}
+	
+}
+
 
 

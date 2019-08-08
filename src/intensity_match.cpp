@@ -19,7 +19,8 @@
 pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
 nav_msgs::Odometry odometry;
 bool start_flag = true;
-bool odometry_flag = false;
+// bool odometry_flag = false;
+bool odometry_flag = true;
 double ref_distance = 0;
 
 using namespace std;

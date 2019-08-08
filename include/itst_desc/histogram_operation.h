@@ -2,8 +2,9 @@
 #define _HISTOGRAM_OPERATION_H_
 
 #include <vector>
-#include <fileope.h>
 #include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Int32.h>
+#include "fileope.h"
 
 #define MIN_(x,y) ((x) < (y) ? (x) : (y))
 
@@ -18,7 +19,10 @@ class histogram_operation
     void match_histogram(int test_number, std::vector<double> &result);
     void match_histogram_all();
 
-	void match_histogram_pc(const std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &score);
+	void match_histogram_pc(const std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &score, std_msgs::Int32 &best_pr_num);
+	
+	void match_histogram_pc_pf(const std::vector<std::vector<int> > test_histogram, double &score_);
+	
 
 
   private:
