@@ -66,6 +66,7 @@ int main(int argc, char** argv)
       //file_ope.output_hist_time(histogram, ros_begin);
       visu.vis_split_pc(n, split_pc_pub, desc.split_pc_f);
       visu.vis_RF(n, RF_pub, desc.eigenvector);
+      input_pc -> points.clear();
     }
     ros::spinOnce();
     loop_rate.sleep();

@@ -32,7 +32,7 @@ class file_operation
 
 
     const double output_time = 5.0;  //histogramを算出する間隔 time
-    const double output_dist = 5.0;  //histogramを算出する間隔 distance
+    const double output_dist = 2.0;  //histogramを算出する間隔 distance
   
   private:
     void name_files(std::string &file_name, int count, std::string forb);
@@ -49,7 +49,7 @@ class file_operation
     int output_count_f;
     int output_count_b;
     const std::string file_dir = "/home/amsl/histogram";
-    const std::string file_dir2 = "/test";
+    const std::string file_dir2 = "/test/gaishu";
     const std::string file_ext = ".csv";
 
     std::ifstream input_log;

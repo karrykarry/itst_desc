@@ -12,8 +12,10 @@ class histogram_operation
   public:
     histogram_operation();
     ~histogram_operation();
+    //保存されたhistogramの入力
     void read_ref_histogram_f(); 
-    void read_ref_histogram_b(); 
+    void read_ref_histogram_b();
+    //histogramのマッチング 
     void match_histogram(std::vector<std::vector<std::vector<int> > >  ref_histogram_f,
                          std::vector<std::vector<int> > test_histogram, std::vector<double> &result);
     //単一のヒストグラム比較 forb->x軸　test_forb->y軸
@@ -23,7 +25,10 @@ class histogram_operation
     void research_match_one(std::vector<std::vector<int> > histogram);
     //第nth番までのノードを検索
     void research_match_n(std::vector<std::vector<int> > histogram, int nth);
+    //ノード検索とodomでの評価を出力
     void evaluate_match_n(nav_msgs::Odometry odometry, std::vector<std::vector<int> > histogram, int nth);
+   
+    void loop_close(void);
 
   private:
     void match_histogram_one(std::string forb, std::string test_forb);
@@ -38,8 +43,10 @@ class histogram_operation
     std::vector<std::vector<double> > histogram_result;
     int ref_hist_vol_f;
     int ref_hist_vol_b;
-    //std::vector<std::string> candidate_hist;
-    std::vector<std::pair<int, std::string> > candidate_hist;
+    std::vector<std::pair<int, std::string> > candidate_hist;  //number forb
+    std::vector<std::pair<double, size_t> > close_nodes;
+    const double loop_close_threshold = 600.0;
+ 
 
 };
 

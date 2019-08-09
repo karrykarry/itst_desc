@@ -15,6 +15,7 @@ histogram_operation::~histogram_operation()
   std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_all);
   std::vector<std::vector<double> >().swap(histogram_result);
   std::vector<std::pair<int, std::string> >().swap(candidate_hist);
+  std::vector<std::pair<double, size_t> >().swap(close_nodes);
 }
 
 void histogram_operation::read_ref_histogram_f(void)
@@ -170,6 +171,10 @@ void histogram_operation::research_match_one(std::vector<std::vector<int> > hist
   double min = *std::min_element(result.begin(), result.end());
   std::vector<double>::iterator minIt = std::min_element(result.begin(), result.end());
   size_t minIndex = std::distance(result.begin(), minIt);
+
+  close_nodes.clear();
+  close_nodes.resize(1);
+  close_nodes[0] = std::make_pair(min, minIndex);
   std::pair<int, std::string> rename_hist;
   std::string min_hist = rename_hist_number(minIndex, rename_hist);
   std::cout << "value " << min << "  index " << min_hist << std::endl;
@@ -183,18 +188,19 @@ void histogram_operation::research_match_n(std::vector<std::vector<int> > histog
   std::vector<double> result;
   match_histogram(ref_histogram_all, histogram, result);
 
-  std::vector<std::pair<double, size_t> > i_result(result.size());
+  close_nodes.clear();
+  close_nodes.resize(result.size());
   for(size_t i = 0; i < result.size(); i++){
-    i_result[i] = std::make_pair(result[i], i);
+    close_nodes[i] = std::make_pair(result[i], i);
   }
-  std::sort(i_result.begin(), i_result.end());
+  std::sort(close_nodes.begin(), close_nodes.end());
   
-  std::cout << "--------------" << std::endl;
+  //std::cout << "--------------" << std::endl;
   for(int i = 0; i < nth; i++){
     std::pair<int, std::string> rename_hist;
-    std::string min_hist = rename_hist_number(i_result[i].second, rename_hist);
+    std::string min_hist = rename_hist_number(close_nodes[i].second, rename_hist);
     candidate_hist.push_back(rename_hist);
-    std::cout << i << "th -> value: " << i_result[i].first << "  index: " << min_hist << std::endl;
+    //std::cout << i << "th -> value: " << close_nodes[i].first << "  index: " << min_hist << std::endl;
   }
 }
 
@@ -214,3 +220,28 @@ void histogram_operation::evaluate_match_n(nav_msgs::Odometry odometry, std::vec
   }
   file_ope.odom_dist_chk(distance_vec);
 }
+
+void histogram_operation::loop_close(void)
+{
+  ref_hist_vol_f = file_ope.file_count("f");
+  int research_n = 3;
+  for(int i = 0; i < ref_hist_vol_f; i++){
+    std::vector<std::vector<int> > test_histogram;
+    file_ope.input_histogram(test_histogram, i, "f");
+    research_match_n(test_histogram, research_n);
+    std::cout << "-----------------" << std::endl;
+    for(int j = 0; j < research_n; j++){
+      std::pair<int, std::string> rename_hist;
+      std::string min_hist = rename_hist_number(close_nodes[j].second, rename_hist);
+      if(rename_hist.first != i){
+        std::cout << i << "th  value: " << close_nodes[j].first << "  node: " << min_hist << std::endl;
+        if(i - rename_hist.first >= 10 && close_nodes[j].first <= loop_close_threshold){
+          std::cout << "loop close" << std::endl;
+        }
+        break;
+      }
+    } 
+  }
+}
+
+

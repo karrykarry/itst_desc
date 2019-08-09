@@ -233,3 +233,6 @@ target_link_libraries(intensity_checker ${catkin_LIBRARIES})
 
 add_executable(histogram_match src/histogram_match.cpp)
 target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})
+
+add_executable(loop_close src/loop_close.cpp)
+target_link_libraries(loop_close descriptor visualizer file_operation localize histogram_operation ${catkin_LIBRARIES})
