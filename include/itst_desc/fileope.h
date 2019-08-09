@@ -10,7 +10,7 @@
 class file_operation
 {
   public:
-    file_operation();
+	file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_);
     ~file_operation();
     void output_hist_dist(std::vector<std::vector<int> > histogram, double distance);
     void output_hist_dist_split(std::vector<std::vector<int> > histogram);
@@ -33,9 +33,10 @@ class file_operation
 
     std::ofstream output_log;
     int output_count = 0;
-    const std::string file_dir = "/home/amsl/Pictures/ros_catkin_ws/itst_desc";
-    const std::string file_dir2 = "/test";
-    const std::string file_ext = ".csv";
+    // const std::string file_dir = "/home/amsl/Pictures/ros_catkin_ws/itst_desc";
+    // const std::string file_dir2 = "/test";
+    // const std::string file_ext = ".csv";
+	std::string file_dir, file_dir2, file_ext;
 
     std::ifstream input_log;
     const int histogram_vol = 16;  //読み込むhistogramの個数

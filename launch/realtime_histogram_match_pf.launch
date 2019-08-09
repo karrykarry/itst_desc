@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- <include file="$(find kari_complement)/launch/imu_complement.launch"/> -->
+
+	<node name="realtime_histogram_match_pf" pkg="itst_desc" type="realtime_histogram_match_pf" output="screen" >
+		<rosparam file="$(find ref_data_manager)/yaml/test_file_pf.yaml"/>
+		
+		<param name="PF_RANGE" value="5.0" />
+		<param name="PF_INTER" value="0.5" />
+		
+		<remap from="/score/vis" to="/score/vis/itst" />
+		<remap from="/score/best" to="/score/best/itst" />
+		<remap from="/pf_cloud/best" to="/pf_cloud/best/itst" />
+
+	</node>
+	
+</launch>
+
+

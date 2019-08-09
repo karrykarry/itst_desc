@@ -35,7 +35,7 @@ def callback(msg):
 def listen():
     print("listen")
     # rospy.Subscriber("/message", Float64MultiArray, callback)
-    rospy.Subscriber("/score/itst/vis", Float64MultiArray, callback)
+    rospy.Subscriber("/score/vis/itst", Float64MultiArray, callback)
     print("subscribed")
     rospy.spin()
 

@@ -7,8 +7,8 @@ H_match_pf::H_match_pf(ros::NodeHandle n,ros::NodeHandle private_nh_):
 	input_txtfile("/home/amsl/Pictures/ros_catkin_ws/scan_context/save_pr/list.txt")
 {	
 	pr_num_vis_pub = n.advertise<visualization_msgs::MarkerArray>("/pr/num/vis", 10, true);
-	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/itst/vis", 10);
-	score_best_pub = n.advertise<std_msgs::Int32>("/score/itst/best", 10);
+	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/vis", 10);
+	score_best_pub = n.advertise<std_msgs::Int32>("/score/best", 10);
 
 	pf_best_pub = n.advertise<geometry_msgs::PoseStamped>("/pf_cloud/best",10);	//結果の表示のみとか
 
@@ -18,7 +18,7 @@ H_match_pf::H_match_pf(ros::NodeHandle n,ros::NodeHandle private_nh_):
 
 	desc = new descriptor();
 		
-	hist_ope = new histogram_operation();
+	hist_ope = new histogram_operation(n, private_nh_);
 	hist_ope->read_ref_histogram();
 
 	
@@ -27,7 +27,7 @@ H_match_pf::H_match_pf(ros::NodeHandle n,ros::NodeHandle private_nh_):
 	
 	P_NUM = pow(( 1 +  (P_RANGE * 2) / P_INTER), 2.0);
 
-	cout<<"----- Particle Number : "<< P_NUM <<" -----"<<endl;
+	std::cout<<"----- Particle Number : "<< P_NUM <<" -----"<<std::endl;
 
 
 }
@@ -126,14 +126,14 @@ H_match_pf::init_pf(){	//初期化
 	
 	// pf_array.header.stamp = ros::Time(0);
 	// pf_pub.publish(pf_array);
-	cout<<"particle generated"<<endl;
+	std::cout<<"particle generated"<<std::endl;
 
 }
 
 
 
 void
-H_match_pf::pub_pf(descriptor::Particle pf){
+H_match_pf::pub_best_pf(descriptor::Particle pf){
 	
 	geometry_msgs::Pose pf_geo;
 	
@@ -175,16 +175,16 @@ H_match_pf::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 	init_pf();
   
 	int pf_num = 0;
-	bool flag = false;
+	bool is_first = false;
 	
-	for(auto pf : pf_cloud){
+	for(const auto pf : pf_cloud){
 		desc->itst_descriptor(input_pc, histogram, pf);
 		hist_ope->match_histogram_pc_pf(histogram, score);
 		
-		if(!flag){
+		if(!is_first){
 			final_ans.score = score;
 			final_ans.num= pf_num;
-			flag = true;
+			is_first = true;
 		}
 		else{
 			if(score > final_ans.score){
@@ -202,7 +202,7 @@ H_match_pf::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 	best_score.data = final_ans.num;
 	score_best_pub.publish(best_score);
 	
-	pub_pf(pf_cloud[final_ans.num]);
+	pub_best_pf(pf_cloud[final_ans.num]);
 
 }
 

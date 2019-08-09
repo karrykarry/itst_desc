@@ -13,8 +13,9 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "histogram_match");
   ros::NodeHandle n;
+  ros::NodeHandle priv_nh("~");
   
-  histogram_operation hist_ope;
+  histogram_operation hist_ope(n,priv_nh);
 
   hist_ope.read_ref_histogram();
   hist_ope.match_histogram_all();

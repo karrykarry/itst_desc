@@ -2,9 +2,9 @@
 
 #include <histogram_operation.h>
 
-histogram_operation::histogram_operation()
+histogram_operation::histogram_operation(ros::NodeHandle n,ros::NodeHandle private_nh_)
 {
-	file_ope = new file_operation();
+	file_ope = new file_operation(n, private_nh_);
 }
 
 histogram_operation::~histogram_operation()

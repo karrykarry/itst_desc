@@ -20,16 +20,6 @@
 #include "histogram_operation.h"
 #include "descriptor.h"
 
-using namespace std;
-
-
-// struct Particle{
-// 	double x;
-// 	double y;
-// 	double weight;
-// };
-
-
 class H_match_pf{
 	private:
 		ros::Publisher pr_num_vis_pub;
@@ -47,13 +37,13 @@ class H_match_pf{
 		std::ifstream reading_file;
 
 		double P_RANGE, P_INTER, P_NUM;
-		vector<descriptor::Particle> pf_cloud;	
+		std::vector<descriptor::Particle> pf_cloud;	
 
 		std::vector<std::string> split(const std::string &str, char sep);
 		visualization_msgs::Marker text_vis(const double now_x,const double now_y,const double now_z);
 		void pr_trajectory_vis();
 		void init_pf();
-		void pub_pf(descriptor::Particle pf);
+		void pub_best_pf(descriptor::Particle pf);
 
 		struct FINAL_ANS{	
 			float score;

@@ -7,15 +7,15 @@ H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_):
 	input_txtfile("/home/amsl/Pictures/ros_catkin_ws/scan_context/save_pr/list.txt")
 {	
 	pr_num_vis_pub = n.advertise<visualization_msgs::MarkerArray>("/pr/num/vis", 10, true);
-	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/itst/vis", 10);
-	score_best_pub = n.advertise<std_msgs::Int32>("/score/itst/best", 10);
+	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/vis", 10);
+	score_best_pub = n.advertise<std_msgs::Int32>("/score/best", 10);
 	
 	pc_sub = n.subscribe<sensor_msgs::PointCloud2>("/velodyne_points", 1, &H_match::pcCallback, this);
  	pr_trajectory_vis();
 
 	desc = new descriptor();
 		
-	hist_ope = new histogram_operation();
+	hist_ope = new histogram_operation(n, private_nh_);
 	hist_ope->read_ref_histogram();
 
 }

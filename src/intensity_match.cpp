@@ -40,6 +40,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "intensity_test");
   ros::NodeHandle n;
+  ros::NodeHandle priv_nh("~");
   ros::Rate loop_rate(10);
 
   ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
@@ -51,7 +52,7 @@ int main(int argc, char** argv)
 
   descriptor desc;
   visualizer visu;
-  file_operation file_ope;
+  file_operation file_ope(n,priv_nh);
   localize local;
 
   std::vector<std::vector<int> > histogram;

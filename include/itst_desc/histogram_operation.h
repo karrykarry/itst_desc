@@ -13,7 +13,7 @@ class file_operation;
 class histogram_operation
 {
   public:
-    histogram_operation();
+    histogram_operation(ros::NodeHandle n,ros::NodeHandle private_nh_);
     ~histogram_operation();
     void read_ref_histogram(); 
     void match_histogram(int test_number, std::vector<double> &result);

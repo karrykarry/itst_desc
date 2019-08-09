@@ -6,8 +6,13 @@
 #include <sstream>
 #include <sys/stat.h>
 
-file_operation::file_operation()
-{}
+file_operation::file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_)
+// file_operation::file_operation()
+{
+	private_nh_.param("ITST_DESC/FILE_DIR", file_dir, {"/home/amsl/Pictures/ros_catkin_ws/itst_desc"});
+	private_nh_.param("ITST_DESC/FILE_DIR2", file_dir2, {"/test"});
+	private_nh_.param("ITST_DESC/FILE_EXT", file_ext, {".csv"});
+}
 
 file_operation::~file_operation()
 {}

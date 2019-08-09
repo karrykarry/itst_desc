@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <launch>
 
-
-	<!-- <include file="$(find kari_complement)/launch/imu_complement.launch"/> -->
-
 	<node name="intensity_match" pkg="itst_desc" type="intensity_match" output="screen" >
+		<rosparam file="$(find ref_data_manager)/yaml/ref_file.yaml"/>
 		<remap from="/lcl_imu" to="/odometer" />
-		<!-- <remap from="/lcl_imu" to="/integrated_to_init/kari" /> -->
+	
 	</node>
 	
 </launch>
