@@ -2,9 +2,9 @@
 <launch>
 
 	<node name="intensity_match" pkg="itst_desc" type="intensity_match" output="screen" >
-		<rosparam file="$(find ref_data_manager)/yaml/ref_file.yaml"/>
-		<remap from="/lcl_imu" to="/odometer" />
-	
+		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
+		
+		<remap from="/lcl_imu" to="/odometer" />	
 	</node>
 	
 </launch>

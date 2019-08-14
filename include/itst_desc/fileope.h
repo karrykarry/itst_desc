@@ -32,14 +32,14 @@ class file_operation
     void read(std::vector<std::vector<int> > &histogram_tmp);
 
     std::ofstream output_log;
-    int output_count = 0;
+    int output_count;
     // const std::string file_dir = "/home/amsl/Pictures/ros_catkin_ws/itst_desc";
     // const std::string file_dir2 = "/test";
     // const std::string file_ext = ".csv";
-	std::string file_dir, file_dir2, file_ext;
+	std::string file_dir, file_dir2, file_dir3, file_ext;
 
     std::ifstream input_log;
-    const int histogram_vol = 16;  //読み込むhistogramの個数
+    constexpr static int histogram_vol = 16;  //読み込むhistogramの個数
 
 };
 

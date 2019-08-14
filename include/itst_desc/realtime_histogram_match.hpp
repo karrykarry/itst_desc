@@ -17,8 +17,6 @@
 #include "histogram_operation.h"
 #include "descriptor.h"
 
-// using namespace std;
-
 class H_match{
 	private:
 		ros::Publisher pr_num_vis_pub;
@@ -33,10 +31,6 @@ class H_match{
 		std::string input_txtfile;
 		std::ifstream reading_file;
 
-
-		std::vector<std::string> split(const std::string &str, char sep);
-		visualization_msgs::Marker text_vis(const double now_x,const double now_y,const double now_z);
-		void pr_trajectory_vis();
 	public:
 		H_match(ros::NodeHandle n,ros::NodeHandle priv_nh);
 		

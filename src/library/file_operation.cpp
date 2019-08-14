@@ -6,12 +6,16 @@
 #include <sstream>
 #include <sys/stat.h>
 
-file_operation::file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_)
+file_operation::file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_) :
+	output_count(0)
 // file_operation::file_operation()
 {
-	private_nh_.param("ITST_DESC/FILE_DIR", file_dir, {"/home/amsl/Pictures/ros_catkin_ws/itst_desc"});
-	private_nh_.param("ITST_DESC/FILE_DIR2", file_dir2, {"/test"});
+	private_nh_.param("ITST_DESC/FILE_DIR", file_dir, {"/home/amsl/Pictures/ros_catkin_ws/ref_data_manager"});
+	private_nh_.param("ITST_DESC/FILE_DIR2", file_dir2, {"/sample"});
+	private_nh_.param("ITST_DESC/FILE_DIR3", file_dir3, {"/itst_desc"});
 	private_nh_.param("ITST_DESC/FILE_EXT", file_ext, {".csv"});
+
+	std::cout << histogram_vol << std::endl;
 }
 
 file_operation::~file_operation()
@@ -22,6 +26,7 @@ void file_operation::name_files(std::string &file_name, int count)
   std::string histogram_n = std::to_string(count);
   file_name = file_dir;
   file_name.append(file_dir2);
+  file_name.append(file_dir3);
   file_name.append("/");
   file_name.append(histogram_n);
   file_name.append(file_ext);

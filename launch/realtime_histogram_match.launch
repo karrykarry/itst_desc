@@ -2,8 +2,8 @@
 <launch>
 
 	<node name="realtime_histogram_match" pkg="itst_desc" type="realtime_histogram_match" output="screen" >
-		<!-- <rosparam file="$(find ref_data_manager)/yaml/ref_file.yaml"/> -->
-		<rosparam file="$(find ref_data_manager)/yaml/test_file.yaml"/>
+		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
+
 		<remap from="/score/vis" to="/score/vis/itst" />
 		<remap from="/score/best" to="/score/best/itst" />
 	</node>

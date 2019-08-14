@@ -1,6 +1,5 @@
 //intensity_match.cpp
 //
-//intensity を用いた記述子をつくる->.csvに書き込み
 //
 
 #include <ros/ros.h>
@@ -18,16 +17,20 @@
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
 nav_msgs::Odometry odometry;
+sensor_msgs::PointCloud2 buffer_pc;
+
 bool start_flag = true;
-// bool odometry_flag = false;
-bool odometry_flag = true;
+bool odometry_flag = false;
+// bool odometry_flag = true;
 double ref_distance = 0;
 
 using namespace std;
 
-void pc_callback(sensor_msgs::PointCloud2 input)
+void pc_callback(const sensor_msgs::PointCloud2ConstPtr& input)
 {
-  pcl::fromROSMsg(input, *input_pc);
+  pcl::fromROSMsg(*input, *input_pc);
+
+  buffer_pc = *input;
 }
 
 void odom_callback(nav_msgs::Odometry input)
@@ -48,7 +51,9 @@ int main(int argc, char** argv)
   
   ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
+  
   ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("pr/saveflag", 10);
+  ros::Publisher PR_pc_pub = n.advertise<sensor_msgs::PointCloud2>("pr/pc", 10);
 
   descriptor desc;
   visualizer visu;
@@ -71,6 +76,7 @@ int main(int argc, char** argv)
         if(local.split_metre(odometry, file_ope.output_dist)){
           file_ope.output_hist_dist_split(histogram);
 			PR_pub.publish(PR_flag); 
+			PR_pc_pub.publish(buffer_pc); 
         }
         odometry_flag = false;
       }
