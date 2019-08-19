@@ -52,8 +52,8 @@ int main(int argc, char** argv)
   ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
   
-  ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("pr/saveflag", 10);
-  ros::Publisher PR_pc_pub = n.advertise<sensor_msgs::PointCloud2>("pr/pc", 10);
+  ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("/pr/saveflag", 10);
+  ros::Publisher PR_pc_pub = n.advertise<sensor_msgs::PointCloud2>("/pr/pc", 10);
 
   descriptor desc;
   visualizer visu;
