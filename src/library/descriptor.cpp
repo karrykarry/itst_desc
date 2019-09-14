@@ -386,13 +386,6 @@ void descriptor::calc_RF(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc, Pa
 }
 
 
-
-
-
-
-
-
-
 void descriptor::itst_descriptor(const pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
                                  std::vector<std::vector<int> > &histogram,
 								 Particle pf)
@@ -402,3 +395,93 @@ void descriptor::itst_descriptor(const pcl::PointCloud<pcl::PointXYZI>::Ptr inpu
   calc_histogram(histogram);
   
 }
+
+
+
+
+
+// /////////// 20190914 add //////////
+// //
+//
+//
+// double descriptor::calc_split_angle(void)
+// {
+//   double angle = atan2(eigenvector[1](1), eigenvector[1](0));
+//   angle = tidy_rad(angle);
+//   //std::cout << "angle " << angle << std::endl;
+//   return angle;
+// }
+//
+//
+// void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+//                            std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > &split_pc,
+//                            double split_angle)
+// {
+//   init_pc_vec(split_pc);
+//
+//   for(size_t i = 0; i < input_pc_size; i++){
+//     pcl::PointXYZI temp;
+//     temp.x = input_pc -> points[i].x;
+//     temp.y = input_pc -> points[i].y;
+//     temp.z = input_pc -> points[i].z;
+//     temp.intensity = input_pc -> points[i].intensity;
+//
+//     double pc_rad = atan2(temp.y ,temp.x) - split_angle;
+//     pc_rad = tidy_rad(pc_rad);
+//     //std::cout << "pc_theta" << pc_rad * 180 / M_PI << std::endl;
+//
+//     double pc_d = sqrt(pow(temp.x, 2) + pow(temp.y, 2) + pow(temp.z, 2));
+//     //std::cout << "pc_d" << pc_d << std::endl;
+//
+//     int split_n = pc_rad / (2 * M_PI) * split_pc_n_v;
+//     //std::cout << "n_orig/ " << split_n << std::endl;
+//
+//     if(pc_d <= split_r2 && temp.z >= 0){  //内球上半分
+//       split_pc[split_n] -> points.push_back(temp);
+//     }else if(pc_d <= split_r2 && temp.z < 0){  //内球下半分
+//       split_n += split_pc_n_v;
+//       split_pc[split_n] -> points.push_back(temp);
+//     }else if(pc_d > split_r2 && pc_d < split_r1 && temp.z >= 0){  //外球上半分
+//       split_n += split_pc_n_v * 2;
+//       split_pc[split_n] -> points.push_back(temp);
+//     }else if(pc_d > split_r2 && pc_d < split_r1 && temp.z < 0){  //外球下半分
+//       split_n += split_pc_n_v * 3;
+//       split_pc[split_n] -> points.push_back(temp);
+//     }
+//
+//   }
+//
+//   //for(int i=0; i<16; i++){
+//   //  std::cout << "n= " << i << " -> " << split_pc[i] -> points.size() << std::endl;
+//   //}
+// }
+//
+// void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
+//                                     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > split_pc)
+// {
+//   histogram.clear();
+//   for(size_t i = 0; i < split_pc.size(); i++){
+//     std::vector<int> histogram_temp(bin_num);
+//     for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
+//       int index = (int)split_pc[i] -> points[j].intensity;
+//       histogram_temp[index] ++;
+//     }
+//     histogram.push_back(histogram_temp);
+//   }
+// }
+//
+// void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+//                                  std::vector<std::vector<int> > &histogram_f,
+//                                  std::vector<std::vector<int> > &histogram_b)
+// {
+//   input_pc_size = input_pc -> points.size();
+//   calc_RF(input_pc);
+//   double split_angle = calc_split_angle();
+//   split_pcs(input_pc, split_pc_f, split_angle);
+//   split_pcs(input_pc, split_pc_b, split_angle + M_PI);
+//   calc_histogram(histogram_f, split_pc_f);
+//   calc_histogram(histogram_b, split_pc_b);
+// }
+//
+//
+//

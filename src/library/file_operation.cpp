@@ -8,7 +8,6 @@
 
 file_operation::file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_) :
 	output_count(0)
-// file_operation::file_operation()
 {
 	private_nh_.param("ITST_DESC/FILE_DIR", file_dir, {"/home/amsl/Pictures/ros_catkin_ws/ref_data_manager"});
 	private_nh_.param("ITST_DESC/FILE_DIR2", file_dir2, {"/sample"});
@@ -189,3 +188,50 @@ int file_operation::file_count(void)
   //std::cout << "file volume = " << i << std::endl;
   return i;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// //// 20190914 add ////
+//
+// void file_operation::output_hist_dist_s_f(std::vector<std::vector<int> > histogram,
+//                                           nav_msgs::Odometry odometry)
+// {
+//   std::cout << "create histogram number: " << output_count_f << "  FRONT" << std::endl;
+//   std::string file_name;
+//   name_files(file_name, output_count_f, "f");
+//   output_count_f++;
+//   std::cout << "output filename  " << file_name << std::endl;
+//   open_output_log(file_name);
+//   write_histogram_coordinate(histogram, odometry);
+//   output_log.close();
+// }
+//
+// void file_operation::output_hist_dist_s_b(std::vector<std::vector<int> > histogram,
+//                                           nav_msgs::Odometry odometry)
+// {
+//   std::cout << "create histogram number: " << output_count_b << "  BACK" << std::endl;
+//   std::string file_name;
+//   name_files(file_name, output_count_b, "b");
+//   output_count_b++;
+//   std::cout << "output filename  " << file_name << std::endl;
+//   open_output_log(file_name);
+//   write_histogram_coordinate(histogram, odometry);
+//   output_log.close();
+// }
+//
+//
+//
+//
