@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="histogram_create" pkg="itst_desc" type="histogram_create" output="screen" >
+		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
+	
+		<remap from="/lcl_imu" to="/odometer" />
+	</node>
+</launch>
+

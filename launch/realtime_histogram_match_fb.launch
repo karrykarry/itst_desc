@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+	<node name="realtime_histogram_match_fb" pkg="itst_desc" type="realtime_histogram_match_fb" output="screen" >
+		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
+
+		<remap from="/score/vis" to="/score/vis/itst" />
+		<remap from="/score/best" to="/score/best/itst" />
+	</node>
+	
+</launch>
+
+
+

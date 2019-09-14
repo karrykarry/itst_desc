@@ -7,12 +7,10 @@
 //事前情報のfront と back を用いてnodeの番号を調べる
 //
 //
-#include "realtime_histogram_match.hpp"
+#include "realtime_histogram_match_fb.hpp"
 
-H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_):
-	input_txtfile("/home/amsl/Pictures/ros_catkin_ws/scan_context/save_pr/list.txt")
+H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_)
 {	
-	pr_num_vis_pub = n.advertise<visualization_msgs::MarkerArray>("/pr/num/vis_", 10, true);
 	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/vis", 10);
 	score_best_pub = n.advertise<std_msgs::Int32>("/score/best", 10);
 	
@@ -21,7 +19,7 @@ H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_):
 	desc = new descriptor();
 		
 	hist_ope = new histogram_operation(n, private_nh_);
-	hist_ope->read_ref_histogram();
+	// hist_ope->read_ref_histogram();
 
 }
 
@@ -30,16 +28,20 @@ void
 H_match::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 {
 	pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
-	std::vector<std::vector<int> > histogram;
+	std::vector<std::vector<int> > histogram_f;	//front のみで判定
+	std::vector<double> results;
+	
 	std_msgs::Float64MultiArray score;
 	std_msgs::Int32 best_score;
 
   	pcl::fromROSMsg(*msg, *input_pc);
    
-	desc->itst_descriptor(input_pc, histogram);
-	hist_ope->match_histogram_pc(histogram, score, best_score);
+	desc->itst_descriptor_one(input_pc, histogram_f);
 	
-	score_vis_pub.publish(score);
+	hist_ope->research_match_pubscore(histogram_f, score, best_score);
+	
+	
+	// score_vis_pub.publish(score);
 	score_best_pub.publish(best_score);
 
 }
