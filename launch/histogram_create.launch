@@ -1,9 +1,20 @@
 <?xml version="1.0"?>
 <launch>
+	
+	<node name="heightmap_node_itst" pkg="velodyne_height_map" type="heightmap_node">
+		<param name="cell_size" value="0.2"/>
+		<param name="full_clouds" value="true"/>
+		<param name="grid_dimensions" value="500"/>
+		<param name="height_threshold" value="0.15"/>
+		
+		<remap from="/velodyne_obstacles" to="/velodyne_obstacles/itst" />
+	</node>
+	
 	<node name="histogram_create" pkg="itst_desc" type="histogram_create" output="screen" >
 		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
 	
 		<remap from="/lcl_imu" to="/odometer" />
+		<remap from="/velodyne_points" to="/velodyne_obstacles/itst" />
 	</node>
 </launch>
 

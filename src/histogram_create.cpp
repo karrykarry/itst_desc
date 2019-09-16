@@ -41,7 +41,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "histogram_create");
   ros::NodeHandle n;
   ros::NodeHandle priv_nh("~");
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(20);
 
   ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
   ros::Subscriber odom_sub = n.subscribe("/lcl_imu", 100, odom_callback);

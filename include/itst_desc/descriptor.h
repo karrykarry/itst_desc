@@ -47,8 +47,8 @@ class descriptor
   size_t input_pc_size;
   const int split_pc_n_v = 4;  //pcの縦分割数
   const int split_pc_n_b = 2;  //pcの球分割数
-  const int split_r1 = 10;  //外側の球の半径
-  const int split_r2 = 5;  //内側の球の半径
+  const int split_r1 = 20;  //外側の球の半径
+  const int split_r2 = 10;  //内側の球の半径
   Eigen::Matrix3d M;
   std::vector<double> eigenvalue;
   const int bin_num = 256;  //histogramのbinの数
