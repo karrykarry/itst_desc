@@ -68,7 +68,6 @@ int main(int argc, char** argv)
       
 		
 		
-		
       desc.itst_descriptor(input_pc, histogram_f, histogram_b);
 
       if(odometry_flag){

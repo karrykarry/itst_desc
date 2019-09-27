@@ -216,6 +216,9 @@ void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
     for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
       int index = (int)split_pc[i] -> points[j].intensity;
       histogram_temp[index] ++;
+		//sq2用
+	   // int index = (int)split_pc[i] -> points[j].intensity / 16.0;
+	   // if(index < bin_num)histogram_temp[index] ++;
     }
     histogram.push_back(histogram_temp);
   }
@@ -239,7 +242,7 @@ void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
   calc_RF(input_pc);
   double split_angle = calc_split_angle();
   split_pcs(input_pc, split_pc_f, split_angle);
-  split_pcs(input_pc, split_pc_b, split_angle + M_PI);
+  split_pcs(input_pc, split_pc_b, split_angle + M_PI); 
   calc_histogram(histogram_f, split_pc_f);
   calc_histogram(histogram_b, split_pc_b);
 }
