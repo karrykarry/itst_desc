@@ -32,6 +32,9 @@ class histogram_operation
 		//最小誤差のノードを検索
 		void research_match_pubscore(std::vector<std::vector<int> > histogram, std_msgs::Float64MultiArray &score, std_msgs::Int32 &best_score);
 		
+		//第nth番までのノードを検索
+		void research_match_pubscore_n(std::vector<std::vector<int> > histogram, std::vector<int>& better_score);
+		
 		
 		//第nth番までのノードを検索
 		void research_match_n(std::vector<std::vector<int> > histogram, int nth);

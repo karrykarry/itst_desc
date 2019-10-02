@@ -246,6 +246,39 @@ void histogram_operation::research_match_pubscore(std::vector<std::vector<int> >
 
 }
 
+void histogram_operation::research_match_pubscore_n(
+		std::vector<std::vector<int> > histogram, 
+		std::vector<int>& better_score)
+{
+	read_ref_histogram_f();
+	read_ref_histogram_b();
+	joint_histogram();
+	std::vector<double> result;
+	match_histogram(ref_histogram_all, histogram, result);
+
+	close_nodes.clear();
+	close_nodes.resize(result.size());
+	for(size_t i = 0; i < result.size(); i++){
+		close_nodes[i] = std::make_pair(result[i], i);
+	}
+	std::sort(close_nodes.begin(), close_nodes.end());
+
+
+	int nth = better_score.size();
+
+	//std::cout << "--------------" << std::endl;
+	for(int i = 0; i < nth; i++){
+		std::pair<int, std::string> rename_hist;
+		std::string min_hist = rename_hist_number(close_nodes[i].second, rename_hist);
+		candidate_hist.push_back(rename_hist);
+		
+		better_score[i] = (close_nodes[i].second < ref_hist_vol_f ? close_nodes[i].second :  close_nodes[i].second - ref_hist_vol_f);
+		std::cout << i << "th -> value: " << better_score[i] << std::endl;
+	
+	}
+
+
+}
 
 
 

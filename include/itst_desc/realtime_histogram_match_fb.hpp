@@ -7,6 +7,7 @@
 
 #include<sensor_msgs/PointCloud2.h>
 #include<std_msgs/Int32.h>
+#include<std_msgs/Int32MultiArray.h>
 #include<std_msgs/Float64MultiArray.h>
 #include<visualization_msgs/Marker.h>
 #include<visualization_msgs/MarkerArray.h>
@@ -21,12 +22,15 @@ class H_match{
 	private:
 		ros::Publisher score_vis_pub;
 		ros::Publisher score_best_pub;
+		ros::Publisher score_better_pub;
 
 		ros::Subscriber pc_sub;
 
   		histogram_operation* hist_ope;
 		descriptor* desc;
 
+		int NUM_CANDIDATE;
+	
 		std::ifstream reading_file;
 
 	public:
