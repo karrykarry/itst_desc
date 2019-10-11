@@ -50,7 +50,7 @@ H_match::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 	best_score_num.data = better_scores[0];
 	
 	score_best_pub.publish(best_score_num);
-	better_scores.erase(better_scores.begin());
+	// better_scores.erase(better_scores.begin());	//pf_scoreのdatasetを作るために削除
 
 	for(auto better_score : better_scores){
 		better_score_num.data.push_back(better_score);
