@@ -59,6 +59,7 @@ H_match::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 	score_better_pub.publish(better_score_num);
 
 
+	std::cout<<std::endl;
 	// score_vis_pub.publish(score);
 
 }

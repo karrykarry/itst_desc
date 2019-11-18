@@ -273,7 +273,7 @@ void histogram_operation::research_match_pubscore_n(
 		candidate_hist.push_back(rename_hist);
 		
 		better_score[i] = (close_nodes[i].second < ref_hist_vol_f ? close_nodes[i].second :  close_nodes[i].second - ref_hist_vol_f);
-		std::cout << i << "th -> value: " << better_score[i] << std::endl;
+		std::cout << i << "th -> value: " << better_score[i] << " score:" << close_nodes[i].first << std::endl;
 	
 	}
 
