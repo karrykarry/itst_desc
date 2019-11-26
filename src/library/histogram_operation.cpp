@@ -7,6 +7,11 @@ histogram_operation::histogram_operation(ros::NodeHandle n,ros::NodeHandle priva
 	ref_hist_vol_f(0), ref_hist_vol_b(0)
 {
 	file_ope = new file_operation(n, private_nh_);
+
+	read_ref_histogram_f();
+	read_ref_histogram_b();
+	joint_histogram();
+	cal_norm();
 }
 
 histogram_operation::~histogram_operation()
@@ -14,6 +19,7 @@ histogram_operation::~histogram_operation()
 	std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_f);
 	std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_b);
 	std::vector<std::vector<std::vector<int> > >().swap(ref_histogram_all);
+	std::vector<std::vector<double> >().swap(ref_histogram_norm);
 	std::vector<std::vector<double> >().swap(histogram_result);
 	std::vector<std::pair<int, std::string> >().swap(candidate_hist);
 	std::vector<std::pair<double, size_t> >().swap(close_nodes);
@@ -43,6 +49,64 @@ void histogram_operation::read_ref_histogram_b(void)
 	}
 }
 
+void histogram_operation::cal_norm(void){
+	std::vector<double> average;
+	for(auto one_node : ref_histogram_all){
+		average.clear();
+		for(auto one_bin : one_node){
+			double one_sum = 0;
+			for(auto one_descriptor : one_bin){
+				one_sum += pow(one_descriptor, 2);
+			}
+			average.push_back(pow(one_sum, 0.5));
+		}
+		ref_histogram_norm.push_back(average);
+	}
+	for(auto ref_ : ref_histogram_norm){
+		for(auto rr : ref_){
+			std::cout<<rr<<", "<<std::flush;
+		}
+		std::cout<<std::endl;
+	}
+}
+
+void histogram_operation::match_histogram_cos(std::vector<std::vector<std::vector<int> > >  ref_histogram, std::vector<std::vector<int> > test_histogram, std::vector<double> &result)
+{
+	bool first_flag = false;
+	std::vector<double> test_norm;
+	for(size_t i = 0; i < ref_histogram.size(); i++){
+		double ith_histogram_average = 0;
+		for(size_t j = 0; j < ref_histogram[0].size(); j++){
+			double histogram_one = 0;
+			double test_sum = 0;
+			for(size_t k = 0; k < ref_histogram[0][0].size(); k++){
+				if(test_histogram[j][k] + ref_histogram[i][j][k] != 0){
+					histogram_one += ref_histogram[i][j][k] * test_histogram[j][k];
+					if(!first_flag) test_sum += pow(test_histogram[j][k], 2);
+				}
+			}
+			if(!first_flag) test_norm.push_back(pow(test_sum, 0.5));
+			if(ref_histogram_norm[i][j] && test_norm[j])
+				histogram_one /= (ref_histogram_norm[i][j]*test_norm[j]);
+			else if(!ref_histogram_norm[i][j] && !test_norm[j]){
+				histogram_one = 1.0;
+			}
+			else histogram_one = 0.0;
+		
+			ith_histogram_average += histogram_one;
+		}
+		
+		ith_histogram_average /= (double)ref_histogram[0].size();
+		result.push_back(ith_histogram_average);
+		first_flag = true;
+	}
+
+}
+
+
+
+
+
 void histogram_operation::match_histogram(std::vector<std::vector<std::vector<int> > >  ref_histogram, std::vector<std::vector<int> > test_histogram, std::vector<double> &result)
 {
 	for(size_t i = 0; i < ref_histogram.size(); i++){
@@ -59,6 +123,7 @@ void histogram_operation::match_histogram(std::vector<std::vector<std::vector<in
 		ith_histogram_average /= (double)ref_histogram[0].size();
 		result.push_back(ith_histogram_average);
 	}
+
 }
 
 
@@ -217,6 +282,7 @@ void histogram_operation::research_match_one(std::vector<std::vector<int> > hist
 	joint_histogram();
 	std::vector<double> result;
 	match_histogram(ref_histogram_all, histogram, result);
+	
 	double min = *std::min_element(result.begin(), result.end());
 	std::vector<double>::iterator minIt = std::min_element(result.begin(), result.end());
 	size_t minIndex = std::distance(result.begin(), minIt);
@@ -250,18 +316,24 @@ void histogram_operation::research_match_pubscore_n(
 		std::vector<std::vector<int> > histogram, 
 		std::vector<int>& better_score)
 {
-	read_ref_histogram_f();
-	read_ref_histogram_b();
-	joint_histogram();
 	std::vector<double> result;
 	match_histogram(ref_histogram_all, histogram, result);
+	
+	std::vector<double> cos_similarity;
+	match_histogram_cos(ref_histogram_all, histogram, cos_similarity);
+	
+	
+	std::vector<std::pair<double, size_t> > cos_similarity_id;
 
 	close_nodes.clear();
 	close_nodes.resize(result.size());
+	cos_similarity_id.resize(result.size());
 	for(size_t i = 0; i < result.size(); i++){
 		close_nodes[i] = std::make_pair(result[i], i);
+		cos_similarity_id[i] = std::make_pair(cos_similarity[i], i);
 	}
 	std::sort(close_nodes.begin(), close_nodes.end());
+	std::sort(cos_similarity_id.begin(), cos_similarity_id.end(), std::greater<std::pair<double, size_t>>());
 
 
 	int nth = better_score.size();
@@ -274,10 +346,16 @@ void histogram_operation::research_match_pubscore_n(
 		
 		better_score[i] = (close_nodes[i].second < ref_hist_vol_f ? close_nodes[i].second :  close_nodes[i].second - ref_hist_vol_f);
 		std::cout << i << "th -> value: " << better_score[i] << " score:" << close_nodes[i].first << std::endl;
-	
+
 	}
+	std::cout<<std::endl;
+	for(int i =0; i < nth ; i++){
+		double cos_id = (cos_similarity_id[i].second < ref_hist_vol_f ? cos_similarity_id[i].second :  cos_similarity_id[i].second - ref_hist_vol_f);
 
-
+		better_score[i] = (int)cos_id;
+		std::cout << i << "th -> value: " << cos_id << " score:" << cos_similarity_id[i].first << std::endl;
+	}
+	
 }
 
 

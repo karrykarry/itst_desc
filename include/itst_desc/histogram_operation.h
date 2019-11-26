@@ -18,7 +18,9 @@ class histogram_operation
 		//保存されたhistogramの入力
 		void read_ref_histogram_f(); 
 		void read_ref_histogram_b();
-		//histogramのマッチング 
+		//histogramのマッチング
+
+		void match_histogram_cos(std::vector<std::vector<std::vector<int>>>, std::vector<std::vector<int>>, std::vector<double>&);
 		void match_histogram(std::vector<std::vector<std::vector<int> > >  ref_histogram_f,
 				std::vector<std::vector<int> > test_histogram, std::vector<double> &result);
 		void match_histogram(std::vector<std::vector<std::vector<int> > >  ref_histogram, std::vector<std::vector<int> > test_histogram, std_msgs::Float64MultiArray &result, int &best_pr_num);
@@ -49,11 +51,16 @@ class histogram_operation
 		void match_histogram_one(std::string forb, std::string test_forb);
 		void match_histogram_all(std::string forb);
 		void joint_histogram(void);
+		void cal_norm(void);
 		std::string rename_hist_number(size_t index, std::pair<int, std::string> &rename_hist);
 
 		std::vector<std::vector<std::vector<int> > >  ref_histogram_f;
 		std::vector<std::vector<std::vector<int> > >  ref_histogram_b;
 		std::vector<std::vector<std::vector<int> > >  ref_histogram_all;
+		std::vector<std::vector<double> >  ref_histogram_norm;	//cos_similarity 
+
+
+
 		std::vector<std::vector<double> > histogram_result;
 		int ref_hist_vol_f;
 		int ref_hist_vol_b;
