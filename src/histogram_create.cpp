@@ -28,12 +28,12 @@ void pc_callback(const sensor_msgs::PointCloud2ConstPtr& input)
   pcl::fromROSMsg(*input, *input_pc);
 
   buffer_pc = *input;
+  odometry_flag = true;
 }
 
 void odom_callback(nav_msgs::Odometry input)
 {
   odometry = input;
-  odometry_flag = true;
 }
 
 int main(int argc, char** argv)
@@ -71,12 +71,12 @@ int main(int argc, char** argv)
       desc.itst_descriptor(input_pc, histogram_f, histogram_b);
 
       if(odometry_flag){
-        if(local.split_metre(odometry, file_ope.output_dist)){
+        // if(local.split_metre(odometry, file_ope.output_dist)){
           file_ope.output_hist_dist_s_f(histogram_f, odometry);
           file_ope.output_hist_dist_s_b(histogram_b, odometry);
 		  	PR_pub.publish(PR_flag); 
 			PR_pc_pub.publish(buffer_pc); 
-        }
+        // }
         odometry_flag = false;
       }
       //file_ope.output_hist_time(histogram, ros_begin);
