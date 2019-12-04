@@ -318,8 +318,8 @@ void histogram_operation::research_match_pubscore_n(
 {
 	std::vector<double> result;
 	match_histogram(ref_histogram_all, histogram, result);
-	double max_chi_square = *std::max_element(result.begin(), result.end());
-	double min_chi_square = *std::min_element(result.begin(), result.end());
+	double max_chi_s = *std::max_element(result.begin(), result.end());
+	double min_chi_s = *std::min_element(result.begin(), result.end());
 	
 	std::vector<double> cos_similarity;
 	match_histogram_cos(ref_histogram_all, histogram, cos_similarity);
@@ -333,12 +333,10 @@ void histogram_operation::research_match_pubscore_n(
 	close_nodes.resize(result.size());
 	cos_similarity_id.resize(result.size());
 	for(size_t i = 0; i < result.size(); i++){
-		// close_nodes[i] = std::make_pair(result[i], i);
-		close_nodes[i] = 
-			std::make_pair(1-(result[i]-min_chi_square)/(max_chi_square-min_chi_square), i);
+		close_nodes[i] = std::make_pair(result[i], i);
 		cos_similarity_id[i] = std::make_pair(cos_similarity[i], i);
 	}
-	std::sort(close_nodes.begin(), close_nodes.end(), std::greater<std::pair<double, size_t>>());
+	std::sort(close_nodes.begin(), close_nodes.end());
 	std::sort(cos_similarity_id.begin(), cos_similarity_id.end(), std::greater<std::pair<double, size_t>>());
 
 
@@ -351,7 +349,10 @@ void histogram_operation::research_match_pubscore_n(
 		candidate_hist.push_back(rename_hist);
 		
 		better_score[i] = (close_nodes[i].second < ref_hist_vol_f ? close_nodes[i].second :  close_nodes[i].second - ref_hist_vol_f);
-		std::cout << i << "th -> value: " << better_score[i] << " score:" << close_nodes[i].first << std::endl;
+		std::cout << i << "th -> value: " << better_score[i] << 
+			"normalize score:" << 1-(close_nodes[i].first-min_chi_s)/(max_chi_s-min_chi_s)  << 
+			" score:" << close_nodes[i].first << 
+			std::endl;
 		
 	}
 	// std::cout<<"Chi-square distribution:"<<std::endl;
