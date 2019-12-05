@@ -35,7 +35,7 @@ class histogram_operation
 		void research_match_pubscore(std::vector<std::vector<int> > histogram, std_msgs::Float64MultiArray &score, std_msgs::Int32 &best_score);
 		
 		//第nth番までのノードを検索
-		void research_match_pubscore_n(std::vector<std::vector<int> > histogram, std::vector<int>& better_score);
+		void research_match_pubscore_n(std::vector<std::vector<int> > histogram, std::vector<int>& better_score, std_msgs::Float64MultiArray& eval_score);
 		
 		
 		//第nth番までのノードを検索

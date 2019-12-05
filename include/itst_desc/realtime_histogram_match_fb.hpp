@@ -23,6 +23,7 @@ class H_match{
 		ros::Publisher score_vis_pub;
 		ros::Publisher score_best_pub;
 		ros::Publisher score_better_pub;
+		ros::Publisher score_pub;
 
 		ros::Subscriber pc_sub;
 

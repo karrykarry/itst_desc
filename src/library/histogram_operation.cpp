@@ -314,7 +314,8 @@ void histogram_operation::research_match_pubscore(std::vector<std::vector<int> >
 
 void histogram_operation::research_match_pubscore_n(
 		std::vector<std::vector<int> > histogram, 
-		std::vector<int>& better_score)
+		std::vector<int>& better_score,
+		std_msgs::Float64MultiArray& eval_score)
 {
 	std::vector<double> result;
 	match_histogram(ref_histogram_all, histogram, result);
@@ -349,6 +350,9 @@ void histogram_operation::research_match_pubscore_n(
 		candidate_hist.push_back(rename_hist);
 		
 		better_score[i] = (close_nodes[i].second < ref_hist_vol_f ? close_nodes[i].second :  close_nodes[i].second - ref_hist_vol_f);
+
+		eval_score.data.push_back(1-(close_nodes[i].first-min_chi_s)/(max_chi_s-min_chi_s));
+
 		std::cout << i << "th -> value: " << better_score[i] << 
 			"normalize score:" << 1-(close_nodes[i].first-min_chi_s)/(max_chi_s-min_chi_s)  << 
 			" score:" << close_nodes[i].first << 
