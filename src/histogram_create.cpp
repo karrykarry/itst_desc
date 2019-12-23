@@ -43,10 +43,10 @@ int main(int argc, char** argv)
   ros::NodeHandle priv_nh("~");
   ros::Rate loop_rate(20);
 
-  ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
-  ros::Subscriber odom_sub = n.subscribe("/lcl_imu", 100, odom_callback);
+  ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1, pc_callback);
+  ros::Subscriber odom_sub = n.subscribe("/lcl_imu", 1, odom_callback);
 
-  ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
+  ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
   
   ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("/pr/saveflag", 10);
