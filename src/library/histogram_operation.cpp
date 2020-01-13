@@ -109,21 +109,42 @@ void histogram_operation::match_histogram_cos(std::vector<std::vector<std::vecto
 
 void histogram_operation::match_histogram(std::vector<std::vector<std::vector<int> > >  ref_histogram, std::vector<std::vector<int> > test_histogram, std::vector<double> &result)
 {
+	static int file_num=0;
+
+	std::cout<<file_num<<std::endl;
+	writing_file.open("/home/amsl/m2_result/ex_itst_result/" + std::to_string(file_num) + ".csv", std::ios::out);	
+	
+
 	for(size_t i = 0; i < ref_histogram.size(); i++){
 		double ith_histogram_average = 0;
 		for(size_t j = 0; j < ref_histogram[0].size(); j++){
 			double histogram_one = 0;
+
+			long int sum_=0;
 			for(size_t k = 0; k < ref_histogram[0][0].size(); k++){
 				if(test_histogram[j][k] + ref_histogram[i][j][k] != 0){
 					histogram_one += 2 * pow(test_histogram[j][k] - ref_histogram[i][j][k], 2) / (test_histogram[j][k] + ref_histogram[i][j][k]);
+			
 				}
+			
 			}
+			writing_file << histogram_one << "," << std::flush;
+
 			ith_histogram_average += histogram_one;
+
 		}
+
 		ith_histogram_average /= (double)ref_histogram[0].size();
 		result.push_back(ith_histogram_average);
+		writing_file << "," << ith_histogram_average  << std::flush;
+		
+		writing_file << std::endl;
 	}
 
+		writing_file << std::endl;
+
+	file_num++;
+	writing_file.close();
 }
 
 
@@ -319,6 +340,9 @@ void histogram_operation::research_match_pubscore_n(
 {
 	std::vector<double> result;
 	match_histogram(ref_histogram_all, histogram, result);
+	
+	
+	
 	double max_chi_s = *std::max_element(result.begin(), result.end());
 	double min_chi_s = *std::min_element(result.begin(), result.end());
 	

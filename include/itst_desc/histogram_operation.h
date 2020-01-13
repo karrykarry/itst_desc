@@ -7,6 +7,7 @@
 #include <std_msgs/Float64MultiArray.h>
 #include <std_msgs/Int32.h>
 // #include "fileope.h"
+#include<fstream>
 
 class file_operation;
 
@@ -69,6 +70,8 @@ class histogram_operation
 		const double loop_close_threshold = 600.0;
 
 
+		std::ofstream writing_file;
+		
 		struct FINAL_ANS{	
 			float score;
 			int num;

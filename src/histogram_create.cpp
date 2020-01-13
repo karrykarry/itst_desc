@@ -41,7 +41,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "histogram_create");
   ros::NodeHandle n;
   ros::NodeHandle priv_nh("~");
-  ros::Rate loop_rate(20);
+  ros::Rate loop_rate(100);
 
   ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1, pc_callback);
   ros::Subscriber odom_sub = n.subscribe("/lcl_imu", 1, odom_callback);
@@ -65,12 +65,12 @@ int main(int argc, char** argv)
 
   while(ros::ok()){
     if(input_pc -> points.size() > 0){
+      if(odometry_flag){
       
 		
 		
       desc.itst_descriptor(input_pc, histogram_f, histogram_b);
 
-      if(odometry_flag){
         // if(local.split_metre(odometry, file_ope.output_dist)){
           file_ope.output_hist_dist_s_f(histogram_f, odometry);
           file_ope.output_hist_dist_s_b(histogram_b, odometry);
@@ -78,10 +78,10 @@ int main(int argc, char** argv)
 			PR_pc_pub.publish(buffer_pc); 
         // }
         odometry_flag = false;
-      }
       //file_ope.output_hist_time(histogram, ros_begin);
       visu.vis_split_pc(n, split_pc_pub, desc.split_pc_f);
       visu.vis_RF(n, RF_pub, desc.eigenvector);
+      }
     }
     ros::spinOnce();
     loop_rate.sleep();

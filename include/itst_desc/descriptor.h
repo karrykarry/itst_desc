@@ -47,7 +47,7 @@ class descriptor
   size_t input_pc_size;
   const int split_pc_n_v = 4;  //pcの縦分割数
   const int split_pc_n_b = 2;  //pcの球分割数
-  const int split_r1 = 40;  //外側の球の半径
+  const int split_r1 = 50;  //外側の球の半径
   const int split_r2 = 20;  //内側の球の半径
   Eigen::Matrix3d M;
   std::vector<double> eigenvalue;
