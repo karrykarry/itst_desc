@@ -16,12 +16,12 @@ class descriptor
 {
 	public:
 
-	typedef pcl::PointXYZI PointXYZINormal;
+	typedef pcl::PointXYZINormal PointXYZINormal;
 	typedef pcl::PointCloud<PointXYZINormal> CloudXYZINormal;
 	typedef pcl::PointCloud<PointXYZINormal>::Ptr CloudXYZINormalPtr;
 
 
-	descriptor();
+	:descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_);
 	void itst_descriptor_one(CloudXYZINormalPtr input_pc,
 			std::vector<std::vector<int> > &histogram);
 	void itst_descriptor(CloudXYZINormalPtr input_pc,
@@ -49,6 +49,8 @@ class descriptor
 	double calc_split_angle(void);
 	void calc_histogram(std::vector<std::vector<int> > &histogram,
 			std::vector<CloudXYZINormalPtr> split_pc_f);
+	void calc_histogram_curvature(std::vector<std::vector<int> > &histogram,
+			std::vector<CloudXYZINormalPtr> split_pc_f);
 
 	size_t input_pc_size;
 	const int split_pc_n_v = 4;  //pcの縦分割数
@@ -57,7 +59,7 @@ class descriptor
 	const int split_r2 = 10;  //内側の球の半径
 	Eigen::Matrix3d M;
 	std::vector<double> eigenvalue;
-	const int bin_num = 256;  //histogramのbinの数
+	int bin_num;  //histogramのbinの数
 };
 
 

@@ -31,6 +31,39 @@ void visualizer::vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
   split_pc_pub.publish(output_pc);
 }
 
+
+
+void visualizer::vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
+                              std::vector<pcl::PointCloud<pcl::PointXYZINormal>::Ptr > split_pc)
+{
+  sensor_msgs::PointCloud2 output_pc;
+  pcl::PointCloud<pcl::PointXYZI>::Ptr output_pc_ (new pcl::PointCloud<pcl::PointXYZI>);
+
+  for(size_t i = 0; i < split_pc.size(); i++){
+    for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
+      pcl::PointXYZI temp; 
+      temp.x = split_pc[i] -> points[j].x;
+      temp.y = split_pc[i] -> points[j].y;
+      temp.z = split_pc[i] -> points[j].z;
+      // temp.intensity = i * 12 + 10;
+      int intensity_temp = i * 26 + 10;
+      if(intensity_temp > 256){
+        intensity_temp -= 256;
+      }
+      temp.intensity = intensity_temp;
+      
+      output_pc_ -> points.push_back(temp);
+    }
+  }
+
+  toROSMsg(*output_pc_, output_pc);
+  output_pc.header.frame_id = frame_id_split_pc;
+  output_pc.header.stamp = ros::Time::now();
+  split_pc_pub.publish(output_pc);
+}
+
+
+
 void visualizer::vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
                         std::vector<Eigen::Vector3d> eigenvector)
 {

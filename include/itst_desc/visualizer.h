@@ -12,7 +12,11 @@ class visualizer
   public:
     void vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
                     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > split_pc);
-    void vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
+    
+	void vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
+                    std::vector<pcl::PointCloud<pcl::PointXYZINormal>::Ptr > split_pc);
+    
+	void vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
               std::vector<Eigen::Vector3d> eigenvector);
 
   private:

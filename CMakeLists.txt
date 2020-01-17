@@ -271,4 +271,26 @@ target_link_libraries(realtime_histogram_match_fb
 )
 
 
+#curvature
+add_library(descriptor_normal src/library/descriptor_normal.cpp)
+
+add_executable(histogram_create_normal src/histogram_create_normal.cpp)
+target_link_libraries(histogram_create_normal 
+	descriptor_normal 
+	visualizer 
+	file_operation 
+	localize 
+	${catkin_LIBRARIES}
+)
+
+
+
+add_executable(realtime_histogram_match_fb_normal node/realtime_histogram_match_fb_normal_node.cpp src/realtime_histogram_match_fb_normal.cpp)
+target_link_libraries(realtime_histogram_match_fb_normal 
+	descriptor_normal
+	histogram_operation 
+	${catkin_LIBRARIES}
+	${PCL_LIBRARIES}
+)
+
 # target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

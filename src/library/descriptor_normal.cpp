@@ -1,9 +1,11 @@
 //////////////////////////
 //descriptor.cpp
 
-#include "descriptor.h"
-descriptor::descriptor(){
+#include "descriptor_normal.h"
 
+descriptor::descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_){
+	
+	private_nh_.param("bin_num", bin_num, {11});
 }
 
 void descriptor::calibration(CloudXYZINormalPtr input_pc)
@@ -44,7 +46,8 @@ void descriptor::split_pcs(CloudXYZINormalPtr input_pc,
     temp.y = input_pc -> points[i].y;
     temp.z = input_pc -> points[i].z;
     temp.intensity = input_pc -> points[i].intensity;
-
+    temp.curvature  = input_pc -> points[i].curvature;
+		
     double pc_rad = atan2(temp.y ,temp.x) - split_angle;
     pc_rad = tidy_rad(pc_rad);
     //std::cout << "pc_theta" << pc_rad * 180 / M_PI << std::endl;
@@ -224,6 +227,25 @@ void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
   }
 }
 
+
+void descriptor::calc_histogram_curvature(std::vector<std::vector<int> > &histogram,
+                                    std::vector<CloudXYZINormalPtr> split_pc)
+{
+  histogram.clear();
+  for(size_t i = 0; i < split_pc.size(); i++){
+    std::vector<int> histogram_temp(bin_num);
+    for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
+      int index = (int)(split_pc[i] -> points[j].curvature*10);
+      histogram_temp[index] ++;
+		//sq2用
+	   // int index = (int)split_pc[i] -> points[j].intensity / 16.0;
+	   // if(index < bin_num)histogram_temp[index] ++;
+    }
+    histogram.push_back(histogram_temp);
+  }
+}
+
+
 void descriptor::itst_descriptor_one(CloudXYZINormalPtr input_pc,
                                  std::vector<std::vector<int> > &histogram)
 {
@@ -231,7 +253,7 @@ void descriptor::itst_descriptor_one(CloudXYZINormalPtr input_pc,
   calc_RF(input_pc);
   double split_angle = calc_split_angle();
   split_pcs(input_pc, split_pc_f, split_angle);
-  calc_histogram(histogram, split_pc_f);
+  calc_histogram_curvature(histogram, split_pc_f);
 }
 
 void descriptor::itst_descriptor(CloudXYZINormalPtr input_pc,
@@ -243,6 +265,6 @@ void descriptor::itst_descriptor(CloudXYZINormalPtr input_pc,
   double split_angle = calc_split_angle();
   split_pcs(input_pc, split_pc_f, split_angle);
   split_pcs(input_pc, split_pc_b, split_angle + M_PI); 
-  calc_histogram(histogram_f, split_pc_f);
-  calc_histogram(histogram_b, split_pc_b);
+  calc_histogram_curvature(histogram_f, split_pc_f);
+  calc_histogram_curvature(histogram_b, split_pc_b);
 }

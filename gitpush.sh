@@ -2,4 +2,4 @@
 
 git add .
 git commit -m "new"
-git push origin kari_update
+git push origin pc_desc 

@@ -10,13 +10,13 @@
 #include <std_msgs/Empty.h>
 #include <visualization_msgs/Marker.h>
 
-#include <descriptor.h>
+#include <descriptor_normal.h>
 #include <visualizer.h>
 #include <fileope.h>
 #include <localize.h>
 
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
+pcl::PointCloud<pcl::PointXYZINormal>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZINormal>);
 nav_msgs::Odometry odometry;
 sensor_msgs::PointCloud2 buffer_pc;
 bool odometry_flag = false;
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
   ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("/pr/saveflag", 10);
   ros::Publisher PR_pc_pub = n.advertise<sensor_msgs::PointCloud2>("/pr/pc", 10);
 
-  descriptor desc;
+  descriptor desc(n,priv_nh);
   visualizer visu;
   file_operation file_ope(n,priv_nh);
   localize local;
