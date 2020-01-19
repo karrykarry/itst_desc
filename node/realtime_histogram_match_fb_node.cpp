@@ -6,7 +6,7 @@
 
 #include <ros/ros.h>
 #include <iostream>
-#include "realtime_histogram_match.hpp"
+#include "realtime_histogram_match_fb.hpp"
 
 
 int main(int argc, char** argv)

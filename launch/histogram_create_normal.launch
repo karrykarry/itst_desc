@@ -11,7 +11,7 @@
 	<!-- 	<remap from="/velodyne_obstacles" to="/velodyne_obstacles/itst" /> -->
 	<!-- </node> -->
 
-	<node name="rm_groundbynormal" pkg="pcl_tutorials" type="rm_groundbynormal">
+	<node name="rm_groundbynormal" pkg="ref_data_manager" type="rm_groundbynormal_z">
 		<param name="rm_normal" value="-0.9"/>
 		
 		<remap from="/velodyne_points" to="/perfect_velodyne/normal" />
@@ -21,7 +21,8 @@
 
 
 	<node pkg="perfect_velodyne" type="normal_estimation_refine_smoothing" name="NormalEstimationForVelodyne">
-		<remap from="/velodyne_points" to="/velodyne_points/slam" />
+		<!-- <remap from="/velodyne_points" to="/velodyne_points/slam" /> -->
+		<remap from="/velodyne_points" to="/rm_cluster/removed_points" />
 
 		<param name="HNN" value="3l" />
 		<param name="MAX_RANGE" value="120.0f" />
@@ -37,7 +38,10 @@
 	</node>
 	
 	<node name="histogram_create_normal" pkg="itst_desc" type="histogram_create_normal" output="screen" >
-		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
+		<rosparam file="$(find ref_data_manager)/config/curv_info.yaml"/>
+		<param name="bin_num" value="11" />
+		<param name="split_r1" value="40" />
+		<param name="split_r2" value="20" />
 	
 		<remap from="/lcl_imu" to="/odometer" />
 		<remap from="/velodyne_points" to="/velodyne_obstacles/itst" />

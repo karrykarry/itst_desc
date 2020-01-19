@@ -53,7 +53,7 @@ int main(int argc, char** argv)
   ros::Publisher PR_pub = n.advertise<std_msgs::Empty>("/pr/saveflag", 10);
   ros::Publisher PR_pc_pub = n.advertise<sensor_msgs::PointCloud2>("/pr/pc", 10);
 
-  descriptor desc;
+  descriptor desc(n,priv_nh);
   visualizer visu;
   file_operation file_ope(n,priv_nh);
   localize local;

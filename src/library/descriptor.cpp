@@ -2,7 +2,11 @@
 //descriptor.cpp
 
 #include "descriptor.h"
-descriptor::descriptor(){
+descriptor::descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_){
+	
+	private_nh_.param("bin_num", bin_num, {256});
+	private_nh_.param("split_r1", split_r1, {60});
+	private_nh_.param("split_r2", split_r2, {20});
 
 }
 

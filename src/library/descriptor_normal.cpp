@@ -6,6 +6,8 @@
 descriptor::descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_){
 	
 	private_nh_.param("bin_num", bin_num, {11});
+	private_nh_.param("split_r1", split_r1, {60});
+	private_nh_.param("split_r2", split_r2, {20});
 }
 
 void descriptor::calibration(CloudXYZINormalPtr input_pc)

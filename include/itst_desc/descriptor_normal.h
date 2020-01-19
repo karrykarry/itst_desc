@@ -21,7 +21,7 @@ class descriptor
 	typedef pcl::PointCloud<PointXYZINormal>::Ptr CloudXYZINormalPtr;
 
 
-	:descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_);
+	descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_);
 	void itst_descriptor_one(CloudXYZINormalPtr input_pc,
 			std::vector<std::vector<int> > &histogram);
 	void itst_descriptor(CloudXYZINormalPtr input_pc,
@@ -55,8 +55,8 @@ class descriptor
 	size_t input_pc_size;
 	const int split_pc_n_v = 4;  //pcの縦分割数
 	const int split_pc_n_b = 2;  //pcの球分割数
-	const int split_r1 = 30;  //外側の球の半径
-	const int split_r2 = 10;  //内側の球の半径
+	int split_r1;  //外側の球の半径
+	int split_r2;  //内側の球の半径
 	Eigen::Matrix3d M;
 	std::vector<double> eigenvalue;
 	int bin_num;  //histogramのbinの数

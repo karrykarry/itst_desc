@@ -19,7 +19,7 @@ H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_)
 	pc_sub = n.subscribe<sensor_msgs::PointCloud2>("/velodyne_points", 1, &H_match::pcCallback, this);
 	private_nh_.param("Number_of_candidate", NUM_CANDIDATE, {5});
 
-	desc = new descriptor();
+	desc = new descriptor(n, private_nh_);
 		
 	hist_ope = new histogram_operation(n, private_nh_);
 
