@@ -7,12 +7,16 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <stdlib.h>
+#include <sstream>
+#include <sys/stat.h>
 
 class file_operation
 {
   public:
-    file_operation();
+	file_operation(ros::NodeHandle n,ros::NodeHandle private_nh_);
     ~file_operation();
+
     //距離によってヒストグラム出力
     void output_hist_dist(std::vector<std::vector<int> > histogram, double distance);
     //ノード距離によってヒストグラム出力
@@ -32,7 +36,7 @@ class file_operation
 
 
     const double output_time = 5.0;  //histogramを算出する間隔 time
-    const double output_dist = 2.0;  //histogramを算出する間隔 distance
+    const double output_dist = 5.0;  //histogramを算出する間隔 distance
   
   private:
     void name_files(std::string &file_name, int count, std::string forb);
@@ -48,9 +52,7 @@ class file_operation
     bool first_output_flag;
     int output_count_f;
     int output_count_b;
-    const std::string file_dir = "/home/amsl/histogram";
-    const std::string file_dir2 = "/test/gaishu";
-    const std::string file_ext = ".csv";
+    std::string file_dir, file_dir2, file_dir3, file_ext;
 
     std::ifstream input_log;
     const int histogram_vol = 16;  //読み込むhistogramの個数

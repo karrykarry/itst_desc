@@ -210,29 +210,88 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(intensity_match_one src/intensity_match_one.cpp)
-add_library(descriptor src/descriptor.cpp)
-add_library(visualizer src/visualizer.cpp)
-add_library(file_operation src/file_operation.cpp)
-add_library(localize src/localize.cpp)
-add_library(histogram_operation src/histogram_operation.cpp)
-target_link_libraries(intensity_match_one descriptor visualizer file_operation localize ${catkin_LIBRARIES})
+add_library(descriptor src/library/descriptor.cpp)
+add_library(visualizer src/library/visualizer.cpp)
+add_library(file_operation src/library/file_operation.cpp)
+add_library(localize src/library/localize.cpp)
+add_library(descriptor_test src/library/descriptor_test.cpp)
+add_library(histogram_operation src/library/histogram_operation.cpp src/library/file_operation.cpp)
+# add_library(histogram_operation src/library/histogram_operation.cpp)
 
-add_executable(intensity_match src/intensity_match.cpp)
-target_link_libraries(intensity_match descriptor visualizer file_operation localize histogram_operation ${catkin_LIBRARIES})
+
+
+
+
+# add_executable(intensity_match src/intensity_match.cpp)
+# target_link_libraries(intensity_match descriptor visualizer file_operation localize ${catkin_LIBRARIES})
+#
+# add_executable(intensity_match_test src/intensity_match_test.cpp)
+# target_link_libraries(intensity_match_test descriptor_test visualizer ${catkin_LIBRARIES})
+#
+# add_executable(intensity_checker src/intensity_checker.cpp)
+# target_link_libraries(intensity_checker ${catkin_LIBRARIES})
+#
+# add_executable(histogram_match src/histogram_match.cpp)
+# target_link_libraries(histogram_match histogram_operation ${catkin_LIBRARIES})
+#
+#
+# add_executable(realtime_histogram_match node/realtime_histogram_match_node.cpp src/realtime_histogram_match.cpp)
+# target_link_libraries(realtime_histogram_match 
+# 	descriptor 
+# 	histogram_operation 
+# 	${catkin_LIBRARIES}
+# 	${PCL_LIBRARIES})
+#
+#
+#
+# add_executable(realtime_histogram_match_pf node/realtime_histogram_match_pf_node.cpp src/realtime_histogram_match_pf.cpp)
+# target_link_libraries(realtime_histogram_match_pf 
+# 	descriptor 
+# 	histogram_operation 
+# 	${catkin_LIBRARIES}
+# 	${PCL_LIBRARIES})
+
+
 
 add_executable(histogram_create src/histogram_create.cpp)
-target_link_libraries(histogram_create descriptor visualizer file_operation localize ${catkin_LIBRARIES})
+target_link_libraries(histogram_create 
+	descriptor 
+	visualizer 
+	file_operation 
+	localize 
+	${catkin_LIBRARIES}
+)
 
-add_executable(intensity_match_test src/intensity_match_test.cpp)
-add_library(descriptor_test src/descriptor_test.cpp)
-target_link_libraries(intensity_match_test descriptor_test visualizer ${catkin_LIBRARIES})
+add_executable(realtime_histogram_match_fb node/realtime_histogram_match_fb_node.cpp src/realtime_histogram_match_fb.cpp)
+target_link_libraries(realtime_histogram_match_fb 
+	descriptor 
+	histogram_operation 
+	${catkin_LIBRARIES}
+	${PCL_LIBRARIES}
+)
 
-add_executable(intensity_checker src/intensity_checker.cpp)
-target_link_libraries(intensity_checker ${catkin_LIBRARIES})
 
-add_executable(histogram_match src/histogram_match.cpp)
-target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})
+#curvature
+add_library(descriptor_normal src/library/descriptor_normal.cpp)
 
-add_executable(loop_close src/loop_close.cpp)
-target_link_libraries(loop_close descriptor visualizer file_operation localize histogram_operation ${catkin_LIBRARIES})
+add_executable(histogram_create_normal src/histogram_create_normal.cpp)
+target_link_libraries(histogram_create_normal 
+	descriptor_normal 
+	visualizer 
+	file_operation 
+	localize 
+	${catkin_LIBRARIES}
+)
+
+
+
+add_executable(realtime_histogram_match_fb_normal node/realtime_histogram_match_fb_normal_node.cpp src/realtime_histogram_match_fb_normal.cpp)
+target_link_libraries(realtime_histogram_match_fb_normal 
+	descriptor_normal
+	visualizer 
+	histogram_operation 
+	${catkin_LIBRARIES}
+	${PCL_LIBRARIES}
+)
+
+# target_link_libraries(histogram_match descriptor file_operation histogram_operation ${catkin_LIBRARIES})

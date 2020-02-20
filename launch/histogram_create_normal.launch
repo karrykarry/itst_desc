@@ -7,12 +7,9 @@
 	<!-- 	<param name="grid_dimensions" value="500"/> -->
 	<!-- 	<param name="height_threshold" value="0.15"/> -->
 	<!-- 	 -->
-	<!-- 	<remap from="/velodyne_points" to="/velodyne_points/slam" /> -->
+	<!-- 	<remap from="/velodyne_points" to="/perfect_velodyne/normal" /> -->
 	<!-- 	<remap from="/velodyne_obstacles" to="/velodyne_obstacles/itst" /> -->
 	<!-- </node> -->
-
-
-
 
 	<node name="rm_groundbynormal" pkg="ref_data_manager" type="rm_groundbynormal_z">
 		<param name="rm_normal" value="-0.9"/>
@@ -39,16 +36,12 @@
 		<param name="DISP" value="1l" />
 
 	</node>
-
-
-
-
-
-	<node name="histogram_create" pkg="itst_desc" type="histogram_create" output="screen" >
-		<rosparam file="$(find ref_data_manager)/config/itst_info.yaml"/>
-		<param name="bin_num" value="256" />
-		<param name="split_r1" value="40" />
-		<param name="split_r2" value="20" />
+	
+	<node name="histogram_create_normal" pkg="itst_desc" type="histogram_create_normal" output="screen" >
+		<rosparam file="$(find ref_data_manager)/config/curv_info.yaml"/>
+		<param name="bin_num" value="11" />
+		<param name="split_r1" value="14" />
+		<param name="split_r2" value="7" />
 	
 		<remap from="/lcl_imu" to="/odometer" />
 		<remap from="/velodyne_points" to="/velodyne_obstacles/itst" />

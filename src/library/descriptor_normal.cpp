@@ -1,24 +1,25 @@
+//////////////////////////
 //descriptor.cpp
 
-#include <descriptor.h>
-#include <math.h>
-#include <Eigen/Core>
-#include <Eigen/Dense>
+#include "descriptor_normal.h"
 
-#include <fstream>
-#include <iostream>
+descriptor::descriptor(ros::NodeHandle n,ros::NodeHandle private_nh_){
+	
+	private_nh_.param("bin_num", bin_num, {11});
+	private_nh_.param("split_r1", split_r1, {60});
+	private_nh_.param("split_r2", split_r2, {20});
+}
 
-
-void descriptor::calibration(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
+void descriptor::calibration(CloudXYZINormalPtr input_pc)
 {}  //not used
 
-void descriptor::init_pc_vec(std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > &split_pc)
+void descriptor::init_pc_vec(std::vector<CloudXYZINormalPtr> &split_pc)
 {
   //前半内球後半外球  0radから順に配列割り振り 
-  std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr >().swap(split_pc);
+  std::vector<CloudXYZINormalPtr>().swap(split_pc);
   int pc_vec_size = 2 * split_pc_n_v * split_pc_n_b;
   for(int i = 0; i < pc_vec_size; i++){
-    pcl::PointCloud<pcl::PointXYZI>::Ptr init_pc (new pcl::PointCloud<pcl::PointXYZI>);
+    CloudXYZINormalPtr init_pc (new CloudXYZINormal);
     split_pc.push_back(init_pc);
   }
 }
@@ -35,19 +36,20 @@ double descriptor::tidy_rad(double rad_in)
   return rad_in;
 }
 
-void descriptor::split_pcs(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
-                           std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > &split_pc,
+void descriptor::split_pcs(CloudXYZINormalPtr input_pc,
+                           std::vector<CloudXYZINormalPtr> &split_pc,
                            double split_angle)
 {
   init_pc_vec(split_pc);
 
   for(size_t i = 0; i < input_pc_size; i++){
-    pcl::PointXYZI temp;
+    PointXYZINormal temp;
     temp.x = input_pc -> points[i].x;
     temp.y = input_pc -> points[i].y;
     temp.z = input_pc -> points[i].z;
     temp.intensity = input_pc -> points[i].intensity;
-
+    temp.curvature  = input_pc -> points[i].curvature;
+		
     double pc_rad = atan2(temp.y ,temp.x) - split_angle;
     pc_rad = tidy_rad(pc_rad);
     //std::cout << "pc_theta" << pc_rad * 180 / M_PI << std::endl;
@@ -104,7 +106,7 @@ void descriptor::sort_eigen(void)
   //}
 }
 
-void descriptor::calc_RF(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
+void descriptor::calc_RF(CloudXYZINormalPtr input_pc)
 {
   init_calc_RF();
   double R2di_sum = 0;
@@ -180,12 +182,9 @@ void descriptor::calc_RF(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc)
       }
     }
   } 
-  //std::cout << "Sx_p " << Sx_p << std::endl;
-  //std::cout << "Sx_m " << Sx_m << std::endl;
-  //std::cout << "Sz_p " << Sz_p << std::endl;
-  //std::cout << "Sz_m " << Sz_m << std::endl;
-  //std::cout << "Sy_p " << Sy_p << std::endl;
-  //std::cout << "Sy_m " << Sy_m << std::endl;
+  // std::cout << "Sx_p " << Sx_p << "Sx_m " << Sx_m << std::endl;
+  // std::cout << "Sz_p " << Sz_p << "Sz_m " << Sz_m << std::endl;
+  // std::cout << "Sy_p " << Sy_p << "Sy_m " << Sy_m << std::endl;
 
   if(Sx_p < Sx_m){
     eigenvector[0] = -eigenvector[0];
@@ -211,7 +210,7 @@ double descriptor::calc_split_angle(void)
 }
 
 void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
-                                    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > split_pc)
+                                    std::vector<CloudXYZINormalPtr> split_pc)
 {
   histogram.clear();
   for(size_t i = 0; i < split_pc.size(); i++){
@@ -219,22 +218,44 @@ void descriptor::calc_histogram(std::vector<std::vector<int> > &histogram,
     for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
       int index = (int)split_pc[i] -> points[j].intensity;
       histogram_temp[index] ++;
+		//sq2用
+	   // int index = (int)split_pc[i] -> points[j].intensity / 16.0;
+	   // if(index < bin_num)histogram_temp[index] ++;
     }
     histogram.push_back(histogram_temp);
   }
 }
 
-void descriptor::itst_descriptor_one(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+
+void descriptor::calc_histogram_curvature(std::vector<std::vector<int> > &histogram,
+                                    std::vector<CloudXYZINormalPtr> split_pc)
+{
+  histogram.clear();
+  for(size_t i = 0; i < split_pc.size(); i++){
+    std::vector<int> histogram_temp(bin_num);
+    for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
+      int index = (int)(split_pc[i] -> points[j].curvature*10);
+      histogram_temp[index] ++;
+		//sq2用
+	   // int index = (int)split_pc[i] -> points[j].intensity / 16.0;
+	   // if(index < bin_num)histogram_temp[index] ++;
+    }
+    histogram.push_back(histogram_temp);
+  }
+}
+
+
+void descriptor::itst_descriptor_one(CloudXYZINormalPtr input_pc,
                                  std::vector<std::vector<int> > &histogram)
 {
   input_pc_size = input_pc -> points.size();
   calc_RF(input_pc);
   double split_angle = calc_split_angle();
   split_pcs(input_pc, split_pc_f, split_angle);
-  calc_histogram(histogram, split_pc_f);
+  calc_histogram_curvature(histogram, split_pc_f);
 }
 
-void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
+void descriptor::itst_descriptor(CloudXYZINormalPtr input_pc,
                                  std::vector<std::vector<int> > &histogram_f,
                                  std::vector<std::vector<int> > &histogram_b)
 {
@@ -242,7 +263,7 @@ void descriptor::itst_descriptor(pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc,
   calc_RF(input_pc);
   double split_angle = calc_split_angle();
   split_pcs(input_pc, split_pc_f, split_angle);
-  split_pcs(input_pc, split_pc_b, split_angle + M_PI);
-  calc_histogram(histogram_f, split_pc_f);
-  calc_histogram(histogram_b, split_pc_b);
+  split_pcs(input_pc, split_pc_b, split_angle + M_PI); 
+  calc_histogram_curvature(histogram_f, split_pc_f);
+  calc_histogram_curvature(histogram_b, split_pc_b);
 }

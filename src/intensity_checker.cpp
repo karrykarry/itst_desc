@@ -1,3 +1,7 @@
+//
+//天候によってintensityがどうなっているかをみたいやつ
+//
+
 #include <ros/ros.h>
 #include <pcl/point_cloud.h>
 #include <pcl_ros/point_cloud.h>

@@ -16,7 +16,7 @@ class descriptor
 {
 	public:
 
-	typedef pcl::PointXYZI PointXYZINormal;
+	typedef pcl::PointXYZINormal PointXYZINormal;
 	typedef pcl::PointCloud<PointXYZINormal> CloudXYZINormal;
 	typedef pcl::PointCloud<PointXYZINormal>::Ptr CloudXYZINormalPtr;
 
@@ -48,6 +48,8 @@ class descriptor
 	void sort_eigen(void);  //固有値の小さい順に並べ替え
 	double calc_split_angle(void);
 	void calc_histogram(std::vector<std::vector<int> > &histogram,
+			std::vector<CloudXYZINormalPtr> split_pc_f);
+	void calc_histogram_curvature(std::vector<std::vector<int> > &histogram,
 			std::vector<CloudXYZINormalPtr> split_pc_f);
 
 	size_t input_pc_size;

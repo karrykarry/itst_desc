@@ -1,3 +1,8 @@
+//
+//軸によって変えるやつ
+//いわば開発段階
+//
+
 #include <ros/ros.h>
 #include <pcl/point_cloud.h>
 #include <pcl_ros/point_cloud.h>
@@ -23,6 +28,7 @@ int main(int argc, char** argv)
   ros::Rate loop_rate(10);
 
   ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
+  
   ros::Publisher split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1000);
   ros::Publisher RF_pub = n.advertise<visualization_msgs::Marker>("RF", 1000);
 

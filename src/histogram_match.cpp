@@ -1,58 +1,26 @@
 //histogram_match.cpp
+//
+//
+//intensity_matchで作られた記述子を総当り戦でどうなるかをやっているプログラム
+//
 
 #include <ros/ros.h>
-#include <pcl/point_cloud.h>
-#include <pcl_ros/point_cloud.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <visualization_msgs/Marker.h>
-#include <descriptor.h>
-#include <fileope.h>
+#include <iostream>
 #include <histogram_operation.h>
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr input_pc (new pcl::PointCloud<pcl::PointXYZI>);
-bool start_flag = true;
-
-using namespace std;
-
-void pc_callback(sensor_msgs::PointCloud2 input)
-{
-  pcl::fromROSMsg(input, *input_pc);
-  //size_t input_size = input_pc->points.size();
-  //cout << "pc_size" << input_size << endl;
-}
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "histogram_match");
   ros::NodeHandle n;
-  ros::Rate loop_rate(10);
+  ros::NodeHandle priv_nh("~");
+  
+  histogram_operation hist_ope(n,priv_nh);
 
-  ros::Subscriber pc_sub = n.subscribe("/velodyne_points", 1000, pc_callback);
+  hist_ope.read_ref_histogram();
+  hist_ope.match_histogram_all();
 
-  descriptor desc;
-  file_operation file_ope;
-  histogram_operation hist_ope;
-
-  std::vector<std::vector<int> > histogram;
-  ros::Time ros_begin;
-
-  hist_ope.read_ref_histogram_f();
-  hist_ope.read_ref_histogram_b();
-  //hist_ope.match_histogram_one("b", "b");
-  hist_ope.match_histogram_all_output("f");
-/*
-  while(ros::ok()){
-    if(input_pc -> points.size() > 0){
-      if(start_flag){
-        ros_begin  = ros::Time::now();
-        start_flag = false;
-      }
-      desc.itst_descriptor(input_pc, histogram);
-      file_ope.output_hist(histogram, ros_begin);
-    }
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
-*/
+  // ros::spin();
+  
   return(0);
 }

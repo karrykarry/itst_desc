@@ -41,9 +41,11 @@ bool localize::split_metre(nav_msgs::Odometry input, double output_dist)
     last_odom_n = input;
     first_odom_flag = false;
     return true;
-  }else{
+  }
+  else{
     double dist_ = calc_distance_n(input);
-    if(fabs(dist_ - output_dist) <= 0.1){
+  	// std::cout << dist_ - output_dist << std::endl;
+    if(dist_ >= output_dist){
       last_odom_n = input;
       return true;
     }
