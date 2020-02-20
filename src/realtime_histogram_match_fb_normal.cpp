@@ -11,6 +11,8 @@
 
 H_match::H_match(ros::NodeHandle n,ros::NodeHandle private_nh_)
 {	
+   	RF_pub = n.advertise<visualization_msgs::Marker>("RF", 10);
+    split_pc_pub = n.advertise<sensor_msgs::PointCloud2>("split_pc", 1);
 	score_vis_pub = n.advertise<std_msgs::Float64MultiArray>("/score/vis", 10); //score	を可視化するため
 	score_best_pub = n.advertise<std_msgs::Int32>("/score/best", 10);//	No.1
 	score_better_pub = n.advertise<std_msgs::Int32MultiArray>("/score/better", 10);//候補も含めたもの
@@ -64,6 +66,9 @@ H_match::pcCallback(const sensor_msgs::PointCloud2ConstPtr &msg)
 	score_better_pub.publish(better_score_num);
 	score_pub.publish(eval_score);
 
+	ros::NodeHandle n;
+    visu.vis_split_pc(n, split_pc_pub, desc->split_pc_f);
+    visu.vis_RF(n, RF_pub, desc->eigenvector);
 
 	std::cout<<std::endl;
 	// score_vis_pub.publish(score);

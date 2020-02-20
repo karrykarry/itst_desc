@@ -288,6 +288,7 @@ target_link_libraries(histogram_create_normal
 add_executable(realtime_histogram_match_fb_normal node/realtime_histogram_match_fb_normal_node.cpp src/realtime_histogram_match_fb_normal.cpp)
 target_link_libraries(realtime_histogram_match_fb_normal 
 	descriptor_normal
+	visualizer 
 	histogram_operation 
 	${catkin_LIBRARIES}
 	${PCL_LIBRARIES}

@@ -15,6 +15,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl_ros/point_cloud.h>
 
+#include <visualizer.h>
 #include "histogram_operation.h"
 #include "descriptor_normal.h"
 
@@ -24,9 +25,13 @@ class H_match{
 		ros::Publisher score_best_pub;
 		ros::Publisher score_better_pub;
 		ros::Publisher score_pub;
+		
+		ros::Publisher RF_pub;
+		ros::Publisher split_pc_pub;
 
 		ros::Subscriber pc_sub;
 
+   		visualizer visu;
   		histogram_operation* hist_ope;
 		descriptor* desc;
 

@@ -63,6 +63,38 @@ void visualizer::vis_split_pc(ros::NodeHandle n, ros::Publisher split_pc_pub,
 }
 
 
+void visualizer::vis_split_pc(ros::Publisher split_pc_pub,
+                              std::vector<pcl::PointCloud<pcl::PointXYZINormal>::Ptr > split_pc)
+{
+  sensor_msgs::PointCloud2 output_pc;
+  pcl::PointCloud<pcl::PointXYZI>::Ptr output_pc_ (new pcl::PointCloud<pcl::PointXYZI>);
+
+  for(size_t i = 0; i < split_pc.size(); i++){
+    for(size_t j = 0; j < split_pc[i] -> points.size(); j++){
+      pcl::PointXYZI temp; 
+      temp.x = split_pc[i] -> points[j].x;
+      temp.y = split_pc[i] -> points[j].y;
+      temp.z = split_pc[i] -> points[j].z;
+      // temp.intensity = i * 12 + 10;
+      int intensity_temp = i * 26 + 10;
+      if(intensity_temp > 256){
+        intensity_temp -= 256;
+      }
+      temp.intensity = intensity_temp;
+      
+      output_pc_ -> points.push_back(temp);
+    }
+  }
+
+  toROSMsg(*output_pc_, output_pc);
+  output_pc.header.frame_id = frame_id_split_pc;
+  output_pc.header.stamp = ros::Time::now();
+  split_pc_pub.publish(output_pc);
+}
+
+
+
+
 
 void visualizer::vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
                         std::vector<Eigen::Vector3d> eigenvector)
@@ -87,9 +119,9 @@ void visualizer::vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
   RFmarker.action = visualization_msgs::Marker::ADD;
   RFmarker.points.push_back(start);
   RFmarker.points.push_back(end);
-  RFmarker.scale.x = 0.1;
-  RFmarker.scale.y = 0.2;
-  RFmarker.scale.z = 0.3;
+  RFmarker.scale.x = 0.1*1.5;
+  RFmarker.scale.y = 0.2*1.5;
+  RFmarker.scale.z = 0.3*1.5;
   RFmarker.color.r = 1.0f;
   RFmarker.color.g = 0.0f;
   RFmarker.color.b = 0.0f;
@@ -109,9 +141,9 @@ void visualizer::vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
   RFmarker1.action = visualization_msgs::Marker::ADD;
   RFmarker1.points.push_back(start);
   RFmarker1.points.push_back(end);
-  RFmarker1.scale.x = 0.1;
-  RFmarker1.scale.y = 0.2;
-  RFmarker1.scale.z = 0.3;
+  RFmarker1.scale.x = 0.1*1.5;
+  RFmarker1.scale.y = 0.2*1.5;
+  RFmarker1.scale.z = 0.3*1.5;
   RFmarker1.color.r = 0.0f;
   RFmarker1.color.g = 1.0f;
   RFmarker1.color.b = 0.0f;
@@ -131,9 +163,9 @@ void visualizer::vis_RF(ros::NodeHandle n, ros::Publisher RF_pub,
   RFmarker2.action = visualization_msgs::Marker::ADD;
   RFmarker2.points.push_back(start);
   RFmarker2.points.push_back(end);
-  RFmarker2.scale.x = 0.1;
-  RFmarker2.scale.y = 0.2;
-  RFmarker2.scale.z = 0.3;
+  RFmarker2.scale.x = 0.1*1.5;
+  RFmarker2.scale.y = 0.2*1.5;
+  RFmarker2.scale.z = 0.3*1.5;
   RFmarker2.color.r = 0.0f;
   RFmarker2.color.g = 0.0f;
   RFmarker2.color.b = 1.0f;

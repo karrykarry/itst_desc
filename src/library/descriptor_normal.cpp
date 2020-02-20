@@ -182,12 +182,9 @@ void descriptor::calc_RF(CloudXYZINormalPtr input_pc)
       }
     }
   } 
-  //std::cout << "Sx_p " << Sx_p << std::endl;
-  //std::cout << "Sx_m " << Sx_m << std::endl;
-  //std::cout << "Sz_p " << Sz_p << std::endl;
-  //std::cout << "Sz_m " << Sz_m << std::endl;
-  //std::cout << "Sy_p " << Sy_p << std::endl;
-  //std::cout << "Sy_m " << Sy_m << std::endl;
+  // std::cout << "Sx_p " << Sx_p << "Sx_m " << Sx_m << std::endl;
+  // std::cout << "Sz_p " << Sz_p << "Sz_m " << Sz_m << std::endl;
+  // std::cout << "Sy_p " << Sy_p << "Sy_m " << Sy_m << std::endl;
 
   if(Sx_p < Sx_m){
     eigenvector[0] = -eigenvector[0];
